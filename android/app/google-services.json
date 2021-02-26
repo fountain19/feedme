@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1014494910076",
+    "project_id": "feedme-e1fd4",
+    "storage_bucket": "feedme-e1fd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1014494910076:android:4b400010c2a00de30ddbf9",
+        "android_client_info": {
+          "package_name": "com.aslan.feedme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1014494910076-j401dgfnmj5ao1f1ovot00d2fcongk6e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXKIN-niWxVwoCcFjjEnn5Ifa78BTduY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1014494910076-j401dgfnmj5ao1f1ovot00d2fcongk6e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
