@@ -1,5 +1,8 @@
 
+import 'package:feedme/screen/homepage.dart';
+import 'package:feedme/screen/login.dart';
 import 'package:feedme/screen/signup.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +22,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: SignUp(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context,snapshot){
+          if(snapshot.hasData)
+            {
+              return HomePage();
+            }else{
+            return Login();
+          }
+        },
+      ),
     );
   }
 }

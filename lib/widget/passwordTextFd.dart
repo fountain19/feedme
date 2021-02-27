@@ -15,7 +15,8 @@ class _PasswordTextFdState extends State<PasswordTextFd> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-
+cursorColor: Colors.white,
+      style: TextStyle(color: Colors.white),
       obscureText: obscureText,
       decoration: InputDecoration(
           fillColor: Colors.blueGrey,

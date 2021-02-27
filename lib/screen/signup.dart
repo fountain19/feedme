@@ -113,10 +113,10 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+
       key: scaffold,
-      body: SingleChildScrollView(
-        child: SafeArea(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(
@@ -146,6 +146,7 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
                             height: 15,
                           ),
                           TextFormFd(
+                               input: TextInputType.number,
                             title:'Phone number',
                             controller:_number ,),
                           SizedBox(

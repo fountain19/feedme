@@ -91,8 +91,8 @@ class _LoginState extends State<Login> {
     return Scaffold(
       key: scaffold,
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
             child: Column(

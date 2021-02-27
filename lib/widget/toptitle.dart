@@ -8,7 +8,7 @@ class TopTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return
         Container(
-        height: 200,
+        height: 100,
         width: 400,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
