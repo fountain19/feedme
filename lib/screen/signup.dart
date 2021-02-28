@@ -115,102 +115,105 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
     return Scaffold(
 
       key: scaffold,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TopTitle(
-                  title: 'Sign up',
-                  subTitle:'Create an account' ,),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                    child: Container(
-                      height: 400,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          TextFormFd(
-                            title:'Full name',
-                            controller:_name ,),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TextFormFd(
-                            title:'Email',
-                            controller:_email ,),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TextFormFd(
-                               input: TextInputType.number,
-                            title:'Phone number',
-                            controller:_number ,),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          TextFormFd(
-                            title:'Address',
-                            controller:_address ,),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                isMale = !isMale;
-                              });
-                            },
-                            child: Container(
-                              height:30.0,
-                              width: double.infinity,
-                              padding: EdgeInsets.only(left: 10.0),
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                isMale==false?'Female':'Male',style: TextStyle(
-                                  fontSize: 16.0,color:Colors.black
-                              ),
-                                //   ),decoration: BoxDecoration(
-                                //   color: Colors.white,
-                                //   borderRadius: BorderRadius.circular(10.0)
+      body: Container(
+        color:Colors.white,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TopTitle(
+                    title: 'Sign up',
+                    subTitle:'Create an account' ,),
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                      child: Container(
+                        height: 400,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            TextFormFd(
+                              title:'Full name',
+                              controller:_name ,),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            TextFormFd(
+                              title:'Email',
+                              controller:_email ,),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            TextFormFd(
+                                 input: TextInputType.number,
+                              title:'Phone number',
+                              controller:_number ,),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            TextFormFd(
+                              title:'Address',
+                              controller:_address ,),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  isMale = !isMale;
+                                });
+                              },
+                              child: Container(
+                                height:30.0,
+                                width: double.infinity,
+                                padding: EdgeInsets.only(left: 10.0),
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  isMale==false?'Female':'Male',style: TextStyle(
+                                    fontSize: 16.0,color:Colors.black
+                                ),
+                                  //   ),decoration: BoxDecoration(
+                                  //   color: Colors.white,
+                                  //   borderRadius: BorderRadius.circular(10.0)
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          PasswordTextFd(
-                            title:'Password',
-                            controller:_password ,),
-                        ],
+                            SizedBox(
+                              height: 15,
+                            ),
+                            PasswordTextFd(
+                              title:'Password',
+                              controller:_password ,),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                isLOading==false?Button(
-                  title:'Sign up' ,
-                  onPressed: () {
-                    vaildation();
-                  },):Center(
-                  child: CircularProgressIndicator(),
-                ),
+                  isLOading==false?Button(
+                    title:'Sign up' ,
+                    onPressed: () {
+                      vaildation();
+                    },):Center(
+                    child: CircularProgressIndicator(),
+                  ),
 
-                SizedBox(
-                  height: 15,
-                ),
-                EndTitle(
-                  onTap: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-                      return Login();
-                    }));
-                  },
-                  title: "I've already an account",
-                  subTitle:  "Login",
-                ),
-              ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  EndTitle(
+                    onTap: (){
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                        return Login();
+                      }));
+                    },
+                    title: "I've already an account",
+                    subTitle:  "Login",
+                  ),
+                ],
+              ),
             ),
           ),
         ),

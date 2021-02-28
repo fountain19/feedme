@@ -91,57 +91,60 @@ class _LoginState extends State<Login> {
     return Scaffold(
       key: scaffold,
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TopTitle(
-                  title: 'Login',
-                  subTitle:'Welcome back!' ,),
-                Center(
-                  child: Container(
-                    height: 300,
-                    width: 400,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        TextFormFd(
-                          title:'Email',
-                          controller:_email ,),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        PasswordTextFd(
-                          title:'Password',
-                          controller:_password ,),
-                      ],
+      body: Container(
+        color: Colors.white,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TopTitle(
+                    title: 'Login',
+                    subTitle:'Welcome back!' ,),
+                  Center(
+                    child: Container(
+                      height: 300,
+                      width: 400,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextFormFd(
+                            title:'Email',
+                            controller:_email ,),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          PasswordTextFd(
+                            title:'Password',
+                            controller:_password ,),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-               isLOading==false? Button(
-                  title:'Login' ,
-                  onPressed: () {
-                    vaildation();
-                  },):Center(
-                 child: CircularProgressIndicator(),
-               ),
+                 isLOading==false? Button(
+                    title:'Login' ,
+                    onPressed: () {
+                      vaildation();
+                    },):Center(
+                   child: CircularProgressIndicator(),
+                 ),
 
-                SizedBox(
-                  height: 15,
-                ),
-                EndTitle(
-                  onTap: (){
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-                      return SignUp();
-                    }));
-                  },
-                  title: "Don't have an account?",
-                  subTitle:  "Sign up",
-                ),
-              ],
+                  SizedBox(
+                    height: 15,
+                  ),
+                  EndTitle(
+                    onTap: (){
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                        return SignUp();
+                      }));
+                    },
+                    title: "Don't have an account?",
+                    subTitle:  "Sign up",
+                  ),
+                ],
+              ),
             ),
           ),
         ),
