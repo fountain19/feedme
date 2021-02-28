@@ -1,4 +1,5 @@
 
+import 'package:feedme/screen/checkOut.dart';
 import 'package:feedme/screen/homepage.dart';
 import 'package:feedme/screen/login.dart';
 import 'package:feedme/screen/signup.dart';
@@ -26,17 +27,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context,snapshot){
-          if(snapshot.hasData)
-            {
-              return HomePage();
-            }else{
-            return Login();
-          }
-        },
-      ),
+      // home: StreamBuilder(
+      //   stream: FirebaseAuth.instance.authStateChanges(),
+      //   builder: (context,snapshot){
+      //     if(snapshot.hasData)
+      //       {
+      //         return HomePage();
+      //       }else{
+      //       return Login();
+      //     }
+      //   },
+      // ),
+     home: CheckOut(),
     );
   }
 }
