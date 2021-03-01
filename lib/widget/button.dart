@@ -9,6 +9,7 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20),
       height: 60,
       width: 400,
       child: RaisedButton(

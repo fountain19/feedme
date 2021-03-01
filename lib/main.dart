@@ -2,7 +2,9 @@
 import 'package:feedme/screen/checkOut.dart';
 import 'package:feedme/screen/homepage.dart';
 import 'package:feedme/screen/login.dart';
+import 'package:feedme/screen/profile.dart';
 import 'package:feedme/screen/signup.dart';
+import 'package:feedme/screen/skipScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +40,8 @@ class MyApp extends StatelessWidget {
       //     }
       //   },
       // ),
-     home: CheckOut(),
+     home: SkipScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
