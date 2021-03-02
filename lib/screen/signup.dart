@@ -119,6 +119,7 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
         color:Colors.white,
         child: SafeArea(
           child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Column(
@@ -160,24 +161,27 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
                             SizedBox(
                               height: 15,
                             ),
-                            GestureDetector(
-                              onTap: (){
-                                setState(() {
-                                  isMale = !isMale;
-                                });
-                              },
-                              child: Container(
-                                height:30.0,
-                                width: double.infinity,
-                                padding: EdgeInsets.only(left: 10.0),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  isMale==false?'Female':'Male',style: TextStyle(
-                                    fontSize: 16.0,color:Colors.black
-                                ),
-                                  //   ),decoration: BoxDecoration(
-                                  //   color: Colors.white,
-                                  //   borderRadius: BorderRadius.circular(10.0)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    isMale = !isMale;
+                                  });
+                                },
+                                child: Container(
+                                  height:25.0,
+                                  width: double.infinity,
+                                  padding: EdgeInsets.only(left: 10.0),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    isMale==false?'Female':'Male',style: TextStyle(
+                                      fontSize: 16.0,color:Colors.black
+                                  ),
+                                    //   ),decoration: BoxDecoration(
+                                    //   color: Colors.white,
+                                    //   borderRadius: BorderRadius.circular(10.0)
+                                  ),
                                 ),
                               ),
                             ),

@@ -1,6 +1,7 @@
 
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
+import 'package:feedme/screen/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class HomePage extends StatelessWidget {
       );
     }
 
-    Widget bottomCard({String image,String name,String address,String rating,String price})
+    Widget bottomCard({String image,String name,String rating,String price})
     {
       return Stack(
         alignment: Alignment.topRight,
@@ -62,10 +63,7 @@ class HomePage extends StatelessWidget {
                           fontSize: 25.0,color: Colors.white,
                           fontWeight:FontWeight.bold
                       ),),
-                      Text(address, style: TextStyle(
-                          fontSize: 20.0,color: Colors.white,
-                          fontWeight:FontWeight.bold
-                      ),),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -208,35 +206,35 @@ class HomePage extends StatelessWidget {
                                       image: "pizza",
                                       name: 'pizza',
                                       price: '\$50',
-                                      address: 'New york',
+
                                       rating: '4.5 Rating'
                                     ),
                                     bottomCard(
                                         image: "burgur",
                                         name: 'burgur',
                                         price: '\$35',
-                                        address: 'London',
+
                                         rating: '5 Rating'
                                     ),
                                     bottomCard(
                                         image: "patato",
                                         name: 'patato',
                                         price: '\$10',
-                                        address: 'Istanbul',
+
                                         rating: '3.5 Rating'
                                     ),
                                     bottomCard(
                                         image: "sandwish",
                                         name: 'sandwish',
                                         price: '\$25',
-                                        address: 'Cairo',
+
                                         rating: '1.5 Rating'
                                     ),
                                     bottomCard(
                                         image: "salad",
                                         name: 'salad',
                                         price: '\$4',
-                                        address: 'India',
+
                                         rating: '2 Rating'
                                     ),
                                   ]),
@@ -318,6 +316,19 @@ class HomePage extends StatelessWidget {
                     leading: CircleAvatar(
                         backgroundColor: Colors.white,
                         child: Icon(Icons.shopping_cart,size: 30,color:Color(0xff193044))),
+                  ),
+                  ListTile(
+                    onTap: (){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>Profile()));
+                    },
+                    title: Text('Profile page', style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight:FontWeight.bold
+                    ),),
+                    leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.person,size: 30,color:Color(0xff193044))),
                   ),
                   ListTile(
                     onTap: ()async

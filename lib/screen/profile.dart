@@ -1,10 +1,16 @@
+import 'package:feedme/screen/signup.dart';
 import 'package:feedme/widget/button.dart';
 import 'package:feedme/widget/textformField.dart';
 import 'package:flutter/material.dart';
 
 import 'homepage.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final TextEditingController _email = TextEditingController();
@@ -18,7 +24,43 @@ class Profile extends StatelessWidget {
     final TextEditingController _address = TextEditingController();
 
     final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
+    bool isMale=true;
+    bool isEdit=true;
+
+    void vaildation() {
+      if (_email.text.isEmpty && _password.text.isEmpty&&_name.text.isEmpty&&_number.text.isEmpty&&_address.text.isEmpty) {
+        scaffold.currentState.showSnackBar(
+            SnackBar(content: Text("Please fill in the empty fields ")));
+      }else if (_name.text.isEmpty) {
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Name is empty")));
+      }
+      else if (_email.text.isEmpty) {
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Email is empty")));
+      }
+      else if (_number.text.isEmpty) {
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Phone number is empty")));
+      }
+      else if (_address.text.isEmpty) {
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Address is empty")));
+      } else if (!SignUp.regExp.hasMatch(_email.text)){
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Email is not valid")));
+      }
+      else if (_password.text.isEmpty) {
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Email is empty")));
+      } else if (_password.text.length < 5) {
+        scaffold.currentState
+            .showSnackBar(SnackBar(content: Text("Password is too short")));
+      }
+    }
+
     return Scaffold(
+      key: scaffold,
       backgroundColor:  Theme.of(context).accentColor,
       appBar: AppBar(
         centerTitle: true,
@@ -41,8 +83,12 @@ class Profile extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(15.0),
             child: GestureDetector(
-              onTap: (){},
-              child: Text('Edit',style: TextStyle(
+              onTap: (){
+               setState(() {
+                 isEdit = !isEdit;
+               });
+              },
+              child: Text(isEdit==false?'Edit':'Close',style: TextStyle(
                 color: Colors.white,fontSize: 20
               ),),
             ),
@@ -115,6 +161,9 @@ height: double.infinity,width: double.infinity,
                 height: 15,
               ),
               Button(
+                onPressed: (){
+                  vaildation();
+                },
                 title: 'Update'
               )
             ],
