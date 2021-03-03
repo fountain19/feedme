@@ -1,5 +1,6 @@
 
 import 'package:feedme/screen/checkOut.dart';
+import 'package:feedme/screen/detailScreen.dart';
 import 'package:feedme/screen/homepage.dart';
 import 'package:feedme/screen/login.dart';
 import 'package:feedme/screen/profile.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       //     }
       //   },
       // ),
-     home: SkipScreen(),
+     home:SkipScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -26,7 +26,7 @@ class _ProfileState extends State<Profile> {
     final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
     bool isMale=true;
     bool isEdit=true;
-
+ 
     void vaildation() {
       if (_email.text.isEmpty && _password.text.isEmpty&&_name.text.isEmpty&&_number.text.isEmpty&&_address.text.isEmpty) {
         scaffold.currentState.showSnackBar(
