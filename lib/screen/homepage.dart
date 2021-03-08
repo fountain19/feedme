@@ -1,6 +1,7 @@
 
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
+import 'package:feedme/screen/detailScreen.dart';
 import 'package:feedme/screen/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,25 +16,32 @@ class HomePage extends StatelessWidget {
     final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
     Widget buildCard({String image,String title})
     {
-      return Container(
-        height: 200,width: 150,
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)
-          ),
-          color: Color(0xff193044),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('images/$image.jpg'),
-              ),
-              Text(title, style: TextStyle(
-                  fontSize: 20.0,color: Colors.white,
-                  fontWeight:FontWeight.bold
-              ),)
-            ],
+      return GestureDetector(
+        onTap: (){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+            return DetailScreen();
+          }));
+        },
+        child: Container(
+          height: 200,width: 150,
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)
+            ),
+            color: Color(0xff193044),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage('images/$image.jpg'),
+                ),
+                Text(title, style: TextStyle(
+                    fontSize: 20.0,color: Colors.white,
+                    fontWeight:FontWeight.bold
+                ),)
+              ],
+            ),
           ),
         ),
       );
@@ -108,7 +116,7 @@ class HomePage extends StatelessWidget {
                       children: [
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-                          height: 50.0,
+                          height: 20.0,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -158,13 +166,13 @@ class HomePage extends StatelessWidget {
                         Container(
                           color:Theme.of(context).accentColor ,
                           width: double.infinity,
-                          height: 250.0,
+                          height: 225.0,
                           child: Column(
                             children: [
                               SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Container(
-                                  height: 250,
+                                  height: 200,
                                   child: Row(
                                     children: [
                                       buildCard(image: 'pizza',title: 'pizza'),

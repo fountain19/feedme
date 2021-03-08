@@ -3,9 +3,21 @@ import 'package:flutter/material.dart';
 
 import 'homepage.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
+  @override
+  _DetailScreenState createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  int counter=1;
+  double totalPrice ;
+  double price =25.4;
+
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      totalPrice = price*counter;
+    });
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
       appBar: AppBar(
@@ -57,7 +69,7 @@ class DetailScreen extends StatelessWidget {
            Row(
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
              children: [
-               Text('\$${50}',style: TextStyle(
+               Text('\$${totalPrice.toStringAsFixed(2)}',style: TextStyle(
                  color: Colors.white,
                  fontWeight: FontWeight.bold,
                  fontSize: 25,
@@ -72,13 +84,26 @@ class DetailScreen extends StatelessWidget {
                  child: Row(
                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                    children: [
-                     IconButton(icon: Icon(Icons.add,color: Colors.white,), onPressed: (){}),
-                     Text('1',style: TextStyle(
+                     IconButton(icon: Icon(Icons.add,color: Colors.white,),
+                         onPressed: (){
+                       setState(() {
+                         counter=counter+1;
+
+                       });
+                         }),
+                     Text(counter.toString(),style: TextStyle(
                        color: Colors.white,
                        fontWeight: FontWeight.bold,
 
                      )),
-                     IconButton(icon: Icon(Icons.remove,color: Colors.white,), onPressed: (){}),
+                     IconButton(icon: Icon(Icons.remove,color: Colors.white,),
+                         onPressed: (){
+                          if(counter>1){
+                            setState(() {
+                              counter=counter-1;
+                            });
+                          }
+                         }),
                    ],
                  ),
                )

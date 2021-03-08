@@ -45,7 +45,7 @@ class _SignUpState extends State<SignUp> {
    });
    try{
 authResult = await FirebaseAuth.instance
-    .createUserWithEmailAndPassword(email: _email.text, password: _password.text);
+    .createUserWithEmailAndPassword(email: _email.text.trim(), password: _password.text.trim());
    }on PlatformException catch(e){
      String message ='Please check internet';
      if(e.message != null)
@@ -65,7 +65,7 @@ authResult = await FirebaseAuth.instance
 FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
   'userId':authResult.user.uid,
   'userName':_name.text,
-  'userEmail':_email.text.trim(),
+  'userEmail':_email.text,
   'userNumber':_number.text,
   'userAddress':_address.text,
   'userGender':isMale==true?'Male':'Female',

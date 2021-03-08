@@ -32,6 +32,8 @@ dependencies:
   cloud_firestore: ^0.16.0+1
   firebase_core: ^0.7.0
   carousel_pro: ^1.0.0
+  image_picker: ^0.6.7+12
+  provider: ^5.0.0
 
 
 dev_dependencies:

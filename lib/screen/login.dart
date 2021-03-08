@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
     });
     try{
       authResult = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email.text, password: _password.text);
+          .signInWithEmailAndPassword(email: _email.text.trim(), password: _password.text.trim());
     }on PlatformException catch(e){
       String message ='Please check internet';
       if(e.message != null)
