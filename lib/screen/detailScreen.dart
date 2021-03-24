@@ -111,35 +111,35 @@ class _DetailScreenState extends State<DetailScreen> {
            ),
                       SizedBox(height: 15,),
                       Text('Weight',style: TextStyle(
-                        color: Colors.black26,
+                        color: Colors.lightBlueAccent,
                         fontWeight: FontWeight.bold,
                         fontSize: 35,
                       )),
                       Text('120kg',style: TextStyle(
-                        color: Colors.yellowAccent,
+                        color: Colors.white60,
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       )),
                       SizedBox(height: 15,),
                       Text('Calories',style: TextStyle(
-                        color: Colors.black26,
+                        color: Colors.lightBlueAccent,
                         fontWeight: FontWeight.bold,
                         fontSize: 35,
                       )),
                       Text('430 ccal',style: TextStyle(
-                        color: Colors.yellowAccent,
+                        color: Colors.white60,
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       )),
                       SizedBox(height: 15,),
                       Text('components',style: TextStyle(
-                        color: Colors.black26,
+                        color: Colors.lightBlueAccent,
                         fontWeight: FontWeight.bold,
                         fontSize: 35,
                       )),
                       Container(
                         child: Text('Tomato, capsicum, cheese, flour, sausage',style: TextStyle(
-                          color: Colors.yellowAccent,
+                          color: Colors.white60,
                           fontWeight: FontWeight.bold,
                           fontSize: 15,
                         )),

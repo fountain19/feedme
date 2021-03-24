@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feedme/main.dart';
 import 'package:feedme/screen/homepage.dart';
 import 'package:feedme/screen/login.dart';
 import 'package:feedme/widget/button.dart';
@@ -10,8 +11,12 @@ import 'package:feedme/widget/toptitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 class SignUp extends StatefulWidget {
+
+  
   static String p =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
@@ -43,6 +48,8 @@ class _SignUpState extends State<SignUp> {
    setState(() {
      isLOading=true;
    });
+
+
    try{
 authResult = await FirebaseAuth.instance
     .createUserWithEmailAndPassword(email: _email.text.trim(), password: _password.text.trim());
@@ -70,6 +77,9 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
   'userAddress':_address.text,
   'userGender':isMale==true?'Male':'Female',
 });
+   // await  localStorage.setString('userEmail', _email.text);
+   // await localStorage.setString('userName', _name.text);
+
    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
    setState(() {
      isLOading=false;

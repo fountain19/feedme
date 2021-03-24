@@ -1,4 +1,5 @@
 
+import 'package:feedme/main.dart';
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
 import 'package:feedme/screen/detailScreen.dart';
@@ -120,13 +121,13 @@ class HomePage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                          IconButton(
-                              icon:Icon(Icons.sort,size: 40,color: Colors.white,)
-                              , onPressed:(){
+                          GestureDetector(
+                              child:Icon(Icons.sort,size: 40,color: Colors.white,)
+                              , onTap:(){
                                 scaffold.currentState.openDrawer();
                           }),
                               IconButton(
-                                  icon:Icon(Icons.notifications,size: 40,color: Colors.white,)
+                                  icon:Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
                                   , onPressed:(){}),
                             ],
                           ),
@@ -273,8 +274,14 @@ class HomePage extends StatelessWidget {
                     currentAccountPicture: CircleAvatar(
                       backgroundImage: AssetImage('images/man.jpg'),
                     ),
-                      accountName: Text('Name'),
-                      accountEmail: Text('Email'),),
+                      accountName: Text(localStorage!=null?
+                        localStorage.getString('userName'):
+                          ''
+                      ),
+                      accountEmail: Text(localStorage!=null?
+                      localStorage.getString('userEmail'):
+                      ''
+                      ),),
                   ListTile(
                     title: Text('Home Page', style: TextStyle(
                         color: Colors.white,

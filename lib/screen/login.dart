@@ -1,4 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:feedme/adminPanel/adminHome.dart';
 import 'package:feedme/screen/signup.dart';
 import 'package:feedme/widget/button.dart';
 import 'package:feedme/widget/endTitle.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+
 import 'homepage.dart';
 
 class Login extends StatefulWidget {
@@ -16,6 +18,7 @@ class Login extends StatefulWidget {
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
   static RegExp regExp = new RegExp(p);
+
 
   @override
   _LoginState createState() => _LoginState();
@@ -27,7 +30,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _password = TextEditingController();
 
   final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
-
+  final admin = 'admin@gmail.com';
   bool isLOading =false;
   bool isMale=true;
 
@@ -37,6 +40,10 @@ class _LoginState extends State<Login> {
     setState(() {
       isLOading=true;
     });
+    if(_email.text==admin)
+    {
+
+
     try{
       authResult = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: _email.text.trim(), password: _password.text.trim());
@@ -57,10 +64,14 @@ class _LoginState extends State<Login> {
       scaffold.currentState.showSnackBar(SnackBar(content: Text(e.toString())));
     }
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+
     setState(() {
       isLOading=false;
     });
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>AdminHome()));
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+    }
   }
 
   void vaildation() {
