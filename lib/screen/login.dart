@@ -12,6 +12,7 @@ import 'package:feedme/widget/toptitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -99,9 +100,10 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future readData()async{
 
-  }
+
+
+
 
   void vaildation() {
     if (_email.text.isEmpty && _password.text.isEmpty) {
@@ -182,6 +184,42 @@ class _LoginState extends State<Login> {
                     },
                     title: "Don't have an account?",
                     subTitle:  "Sign up",
+                  ),
+                  SizedBox(height: 10,),
+                  Row(
+                      children: <Widget>[
+                        Expanded(
+                            child: Divider(color:Color(0xff193044),thickness: 2,)
+                        ),
+
+                        Text("OR",style: TextStyle(
+                          fontSize: 25,fontWeight: FontWeight.bold
+                        ),),
+                        Expanded(
+                            child: Divider(color:Color(0xff193044),thickness: 2,)
+                        ),
+                      ]
+                  ),
+                  SizedBox(height: 15,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: (){
+
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('images/icon/google.png'),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: (){},
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('images/icon/face.png'),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

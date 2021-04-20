@@ -25,7 +25,7 @@ class _ProfileState extends State<Profile> {
 
 
 
-  User user;
+
   TextEditingController _name = TextEditingController();
   TextEditingController _number = TextEditingController();
   TextEditingController _address = TextEditingController();

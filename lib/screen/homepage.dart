@@ -19,24 +19,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String finalName;
-  String finalEmail;
+  String finalName='';
+  String finalEmail='';
    String finalImage='';
 
-  Future getEmailAndName()async{
+  void getEmailAndName()async{
     final  SharedPreferences localStorage=await SharedPreferences.getInstance();
-    var name = localStorage.getString('userName');
-    setState(() {
-      finalName = name;
-    });
-    var email = localStorage.getString('userEmail');
-    setState(() {
-      finalEmail=email;
-    });
-    var image = localStorage.getString('userImage');
-    setState(() {
-      finalImage=image;
-    });
+    finalName= localStorage.getString('userName');
+    finalEmail = localStorage.getString('userEmail');
+    finalImage = localStorage.getString('userImage');
+    setState(() {});
   }
 
   @override
