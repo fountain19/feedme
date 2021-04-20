@@ -3,16 +3,54 @@ import 'package:feedme/main.dart';
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
 import 'package:feedme/screen/detailScreen.dart';
+import 'package:feedme/screen/order.dart';
 import 'package:feedme/screen/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'login.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String finalName;
+  String finalEmail;
+   String finalImage='';
+
+  Future getEmailAndName()async{
+    final  SharedPreferences localStorage=await SharedPreferences.getInstance();
+    var name = localStorage.getString('userName');
+    setState(() {
+      finalName = name;
+    });
+    var email = localStorage.getString('userEmail');
+    setState(() {
+      finalEmail=email;
+    });
+    var image = localStorage.getString('userImage');
+    setState(() {
+      finalImage=image;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEmailAndName();
+  }
   @override
   Widget build(BuildContext context) {
+
+
+
+
+
 
     final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
     Widget buildCard({String image,String title})
@@ -101,6 +139,8 @@ class HomePage extends StatelessWidget {
       );
     }
 
+
+
     return Scaffold(
       key: scaffold,
       body:
@@ -126,9 +166,13 @@ class HomePage extends StatelessWidget {
                               , onTap:(){
                                 scaffold.currentState.openDrawer();
                           }),
-                              IconButton(
-                                  icon:Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
-                                  , onPressed:(){}),
+                              GestureDetector(
+                                  child:Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
+                                  , onTap:(){
+                                Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                                  return OrderScreen();
+                                }));
+                              }),
                             ],
                           ),
                         ),
@@ -272,17 +316,22 @@ class HomePage extends StatelessWidget {
                       color: Color(0xff193044)
                     ),
                     currentAccountPicture: CircleAvatar(
-                      backgroundImage: AssetImage('images/man.jpg'),
+                      backgroundImage:finalImage=='' || finalImage==null ?AssetImage('images/icon/person.png'):NetworkImage(finalImage)
                     ),
-                      accountName: Text(localStorage!=null?
-                        localStorage.getString('userName'):
-                          ''
+                      accountName: Text(
+                      finalName!=null?finalName:''
+
                       ),
-                      accountEmail: Text(localStorage!=null?
-                      localStorage.getString('userEmail'):
-                      ''
+                      accountEmail: Text(
+                      finalEmail!=null?finalEmail:''
+
                       ),),
                   ListTile(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                        return HomePage();
+                      }));
+                    },
                     title: Text('Home Page', style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -294,7 +343,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ListTile(
                     onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx){
                         return Contact();
                       }));
                     },
@@ -309,7 +358,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ListTile(
                     onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx){
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx){
                         return AboutPage();
                       }));
                     },
@@ -323,6 +372,11 @@ class HomePage extends StatelessWidget {
                         child: Icon(Icons.info,size: 30,color:Color(0xff193044))),
                   ),
                   ListTile(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                        return OrderScreen();
+                      }));
+                    },
                     title: Text('Order', style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -334,7 +388,7 @@ class HomePage extends StatelessWidget {
                   ),
                   ListTile(
                     onTap: (){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>Profile()));
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx)=>Profile()));
                     },
                     title: Text('Profile page', style: TextStyle(
                         color: Colors.white,
@@ -348,8 +402,14 @@ class HomePage extends StatelessWidget {
                   ListTile(
                     onTap: ()async
                     {
+                      SharedPreferences localStorage =
+                      await SharedPreferences.getInstance();
+                      localStorage.clear();
                       await FirebaseAuth.instance.signOut();
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>Login()));
+                     Navigator.push(context, MaterialPageRoute(builder: (context){
+                       return Login();
+                     }));
+
                     },
                     title: Text('Log out', style: TextStyle(
                         color: Colors.white,
@@ -368,4 +428,9 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+
+
+
+
 }

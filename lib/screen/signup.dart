@@ -1,17 +1,24 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:feedme/main.dart';
+
+
 import 'package:feedme/screen/homepage.dart';
 import 'package:feedme/screen/login.dart';
 import 'package:feedme/widget/button.dart';
 import 'package:feedme/widget/endTitle.dart';
-import 'package:feedme/widget/gender.dart';
+
 import 'package:feedme/widget/passwordTextFd.dart';
 import 'package:feedme/widget/textformField.dart';
 import 'package:feedme/widget/toptitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 
 class SignUp extends StatefulWidget {
@@ -39,20 +46,27 @@ class _SignUpState extends State<SignUp> {
 
   final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
 
+  String userId = Uuid().v4();
+
  bool isLOading =false;
  bool isMale=true;
 
  UserCredential authResult;
 
+
+
+
  void submit()async{
+
    setState(() {
      isLOading=true;
    });
-
+   final  SharedPreferences localStorage=await SharedPreferences.getInstance();
 
    try{
 authResult = await FirebaseAuth.instance
-    .createUserWithEmailAndPassword(email: _email.text.trim(), password: _password.text.trim());
+    .createUserWithEmailAndPassword(email: _email.text.trim(), password: _password.text);
+
    }on PlatformException catch(e){
      String message ='Please check internet';
      if(e.message != null)
@@ -69,16 +83,22 @@ authResult = await FirebaseAuth.instance
      });
      scaffold.currentState.showSnackBar(SnackBar(content: Text(e.toString())));
    }
-FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
+  FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
+    'userImage':'',
   'userId':authResult.user.uid,
-  'userName':_name.text,
+  'userName':_name.text.trim(),
   'userEmail':_email.text,
-  'userNumber':_number.text,
-  'userAddress':_address.text,
+  'userNumber':_number.text.trim(),
+  'userAddress':_address.text.trim(),
   'userGender':isMale==true?'Male':'Female',
 });
-   // await  localStorage.setString('userEmail', _email.text);
-   // await localStorage.setString('userName', _name.text);
+   await  localStorage.setString('userImage', '');
+   await  localStorage.setString('userNumber', _number.text);
+   await  localStorage.setString('userAddress', _address.text);
+   await  localStorage.setString('userEmail', _email.text);
+   await localStorage.setString('userName', _name.text);
+   await localStorage.setString('userId', authResult.user.uid);
+   await localStorage.setString('userGender', isMale==true?'Male':'Female');
 
    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
    setState(() {
@@ -117,23 +137,24 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
           .showSnackBar(SnackBar(content: Text("Password is too short")));
     }else{
       submit();
+
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+backgroundColor: Colors.white,
       key: scaffold,
-      body: Container(
-        color:Colors.white,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      body:ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: SafeArea(
+
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
                 children: [
                   TopTitle(
                     title: 'Sign up',
@@ -141,68 +162,74 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
                   Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                      child: Container(
-                        height: 400,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextFormFd(
-                              title:'Full name',
-                              controller:_name ,),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            TextFormFd(
-                              title:'Email',
-                              controller:_email ,),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            TextFormFd(
-                                 input: TextInputType.number,
-                              title:'Phone number',
-                              controller:_number ,),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            TextFormFd(
-                              title:'Address',
-                              controller:_address ,),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    isMale = !isMale;
-                                  });
-                                },
-                                child: Container(
-                                  height:25.0,
-                                  width: double.infinity,
-                                  padding: EdgeInsets.only(left: 10.0),
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    isMale==false?'Female':'Male',style: TextStyle(
-                                      fontSize: 16.0,color:Colors.black
-                                  ),
-                                    //   ),decoration: BoxDecoration(
-                                    //   color: Colors.white,
-                                    //   borderRadius: BorderRadius.circular(10.0)
-                                  ),
+                      child: Column(
+                        children: [
+
+                              CircleAvatar(
+                                backgroundColor: Colors.blueGrey,
+                                backgroundImage: AssetImage('images/icon/person.png'),
+                                radius: 75,
+                              ),
+
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormFd(
+                            title:'Full name',
+                            controller:_name ,),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormFd(
+                            title:'Email',
+                            controller:_email ,),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormFd(
+                            input: TextInputType.number,
+                            title:'Phone number',
+                            controller:_number ,),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          TextFormFd(
+                            title:'Address',
+                            controller:_address ,),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  isMale = !isMale;
+                                });
+                              },
+                              child: Container(
+                                height:25.0,
+                                width: double.infinity,
+                                padding: EdgeInsets.only(left: 10.0),
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  isMale==false?'Female':'Male',style: TextStyle(
+                                    fontSize: 16.0,color:Colors.black
+                                ),
+                                  //   ),decoration: BoxDecoration(
+                                  //   color: Colors.white,
+                                  //   borderRadius: BorderRadius.circular(10.0)
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            PasswordTextFd(
-                              title:'Password',
-                              controller:_password ,),
-                          ],
-                        ),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          PasswordTextFd(
+                            title:'Password',
+                            controller:_password ,),
+                        ],
                       ),
                     ),
                   ),
@@ -230,8 +257,9 @@ FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
               ),
             ),
           ),
-        ),
-      ),
+        ],
+      )
+
     );
   }
 }

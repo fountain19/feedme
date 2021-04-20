@@ -34,11 +34,11 @@ dependencies:
   carousel_pro: ^1.0.0
   image_picker: ^0.7.2+1
   provider: ^5.0.0
-  image: ^3.0.1
   firebase_storage: ^8.0.0
   uuid: ^3.0.1
-  path_provider: ^2.0.1
   shared_preferences: ^2.0.5
+  fluttertoast: ^8.0.3
+
 
 
 dev_dependencies:
@@ -67,6 +67,8 @@ flutter:
    - images/et.jpg
    - images/izgara.jpg
    - images/kofte.jpg
+   - images/icon/cart.png
+   - images/icon/person.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -10,6 +10,7 @@ class TextFormFd extends StatelessWidget {
     return  Padding(
     padding: EdgeInsets.symmetric(horizontal: 20),
       child: TextFormField(
+
         cursorColor: Colors.white,
 style: TextStyle(color: Colors.white),
         keyboardType: input,

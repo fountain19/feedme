@@ -1,5 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/adminPanel/adminHome.dart';
+
+
 import 'package:feedme/screen/signup.dart';
 import 'package:feedme/widget/button.dart';
 import 'package:feedme/widget/endTitle.dart';
@@ -9,6 +12,8 @@ import 'package:feedme/widget/toptitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 import 'homepage.dart';
@@ -25,6 +30,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+
+
   final TextEditingController _email = TextEditingController();
 
   final TextEditingController _password = TextEditingController();
@@ -36,17 +44,21 @@ class _LoginState extends State<Login> {
 
   UserCredential authResult;
 
+
+
+
+
   void submit()async{
     setState(() {
       isLOading=true;
     });
-    if(_email.text==admin)
+    if(_email.text!=admin)
     {
 
 
     try{
       authResult = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email.text.trim(), password: _password.text.trim());
+          .signInWithEmailAndPassword(email: _email.text, password: _password.text);
     }on PlatformException catch(e){
       String message ='Please check internet';
       if(e.message != null)
@@ -63,15 +75,32 @@ class _LoginState extends State<Login> {
       });
       scaffold.currentState.showSnackBar(SnackBar(content: Text(e.toString())));
     }
+    final  SharedPreferences localStorage=await SharedPreferences.getInstance();
+    FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).get().then((dataSnapShot) async{
+
+      await localStorage.setString('userImage', dataSnapShot['userImage']);
+      await localStorage.setString('userNumber', dataSnapShot['userNumber']);
+      await localStorage.setString('userAddress', dataSnapShot['userAddress']);
+      await localStorage.setString('userName', dataSnapShot['userName']);
+      await localStorage.setString('userEmail', dataSnapShot['userEmail']);
+      await localStorage.setString('userId', dataSnapShot['userId']);
+      await localStorage.setString('userGender', dataSnapShot['userGender']);
+    }
+    );
 
 
     setState(() {
       isLOading=false;
     });
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>AdminHome()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
     }else{
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>AdminHome()));
     }
+  }
+
+  Future readData()async{
+
   }
 
   void vaildation() {
@@ -123,7 +152,7 @@ class _LoginState extends State<Login> {
                         children: [
                           TextFormFd(
                             title:'Email',
-                            controller:_email ,),
+                            controller:_email,),
                           SizedBox(
                             height: 15,
                           ),
