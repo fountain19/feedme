@@ -12,6 +12,8 @@ import 'package:feedme/widget/toptitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,6 +35,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
 
 
+  Map<String, dynamic> _userData;
+  AccessToken _accessToken;
 
   final TextEditingController _email = TextEditingController();
 
@@ -103,6 +107,91 @@ class _LoginState extends State<Login> {
 
 
 
+
+    Future<UserCredential> signInWithFacebook() async {
+      final SharedPreferences localStorage = await SharedPreferences
+          .getInstance();
+
+
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions:['public_profile','email',],
+      );
+
+        final userData= await FacebookAuth.instance.getUserData();
+        // Create a credential from the access token
+        final OAuthCredential credential = FacebookAuthProvider.credential(
+            result.accessToken.token);
+        // Once signed in, return the UserCredential;
+        final authResult = await FirebaseAuth.instance.signInWithCredential(
+            credential);
+
+        setState(() {
+          _userData=userData;
+        });
+
+      //   print('userData${_userData['email']}');
+      // print('userData${_userData['id']}');
+      // print('userData${_userData['name']}');
+      // print('userData${_userData['picture']}');
+
+
+      if (authResult != null) {
+          FirebaseFirestore.instance.collection('userData').doc(
+              authResult.user.uid).set({
+            'userImage': authResult.user.photoURL,
+            'userId': authResult.user.uid,
+            'userName': authResult.user.displayName,
+            'userEmail': authResult.user.email,
+            'userNumber': '',
+            'userAddress': '',
+
+          });
+          await localStorage.setString('userImage', authResult.user.photoURL);
+          await localStorage.setString('userNumber', '');
+          await localStorage.setString('userAddress', '');
+          await localStorage.setString('userEmail', authResult.user.email);
+          await localStorage.setString('userName', authResult.user.displayName);
+          await localStorage.setString('userId', authResult.user.uid);
+        }
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (ctx) => HomePage()));
+
+    }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final  SharedPreferences localStorage=await SharedPreferences.getInstance();
+    // Trigger the authentication flow
+    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    // Create a new credential
+    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+   final authResult=await FirebaseAuth.instance.signInWithCredential(credential);
+   if(authResult!=null){
+        FirebaseFirestore.instance.collection('userData').doc(authResult.user.uid).set({
+       'userImage':authResult.user.photoURL,
+       'userId':authResult.user.uid,
+       'userName':authResult.user.displayName,
+       'userEmail':authResult.user.email,
+       'userNumber':'',
+       'userAddress':'',
+
+     });
+     await  localStorage.setString('userImage', '');
+     await  localStorage.setString('userNumber', '');
+     await  localStorage.setString('userAddress', '');
+     await  localStorage.setString('userEmail',authResult.user.email);
+     await localStorage.setString('userName', authResult.user.displayName);
+     await localStorage.setString('userId', authResult.user.uid);
+   }
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+  }
 
 
   void vaildation() {
@@ -206,15 +295,17 @@ class _LoginState extends State<Login> {
                     children: [
                       GestureDetector(
                         onTap: (){
+                      signInWithGoogle();
 
-                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
                         },
                         child: CircleAvatar(
                           backgroundImage: AssetImage('images/icon/google.png'),
                         ),
                       ),
                       GestureDetector(
-                        onTap: (){},
+                        onTap: (){
+                          signInWithFacebook();
+                        },
                         child: CircleAvatar(
                           backgroundImage: AssetImage('images/icon/face.png'),
                         ),

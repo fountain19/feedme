@@ -90,7 +90,7 @@ authResult = await FirebaseAuth.instance
   'userEmail':_email.text,
   'userNumber':_number.text.trim(),
   'userAddress':_address.text.trim(),
-  'userGender':isMale==true?'Male':'Female',
+
 });
    await  localStorage.setString('userImage', '');
    await  localStorage.setString('userNumber', _number.text);
@@ -98,7 +98,7 @@ authResult = await FirebaseAuth.instance
    await  localStorage.setString('userEmail', _email.text);
    await localStorage.setString('userName', _name.text);
    await localStorage.setString('userId', authResult.user.uid);
-   await localStorage.setString('userGender', isMale==true?'Male':'Female');
+
 
    Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
    setState(() {
@@ -196,33 +196,6 @@ backgroundColor: Colors.white,
                           TextFormFd(
                             title:'Address',
                             controller:_address ,),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: GestureDetector(
-                              onTap: (){
-                                setState(() {
-                                  isMale = !isMale;
-                                });
-                              },
-                              child: Container(
-                                height:25.0,
-                                width: double.infinity,
-                                padding: EdgeInsets.only(left: 10.0),
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  isMale==false?'Female':'Male',style: TextStyle(
-                                    fontSize: 16.0,color:Colors.black
-                                ),
-                                  //   ),decoration: BoxDecoration(
-                                  //   color: Colors.white,
-                                  //   borderRadius: BorderRadius.circular(10.0)
-                                ),
-                              ),
-                            ),
-                          ),
                           SizedBox(
                             height: 15,
                           ),

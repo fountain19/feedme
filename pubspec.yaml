@@ -39,7 +39,9 @@ dependencies:
   shared_preferences: ^2.0.5
   fluttertoast: ^8.0.3
   dependencies:
-  google_sign_in: "^4.5.1"
+  google_sign_in: ^4.5.9
+  flutter_facebook_auth: ^3.3.3+1
+
 
 
 

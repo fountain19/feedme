@@ -35,7 +35,7 @@ class _ProfileState extends State<Profile> {
   String address = '';
   String email ;
   String id ;
-  String gender ;
+
   String image;
 
 
@@ -53,7 +53,7 @@ class _ProfileState extends State<Profile> {
     name = localStorage.getString('userName');
     email=localStorage.getString('userEmail');
     id=localStorage.getString('userId');
-    gender=localStorage.getString('userGender');
+
     image=localStorage.getString('userImage');
 
     _name = TextEditingController(text: name);
@@ -100,7 +100,7 @@ class _ProfileState extends State<Profile> {
         'userEmail':email,
         'userNumber':number,
         'userAddress':address,
-        'userGender':gender,
+
           }).then((data) async {
             await localStorage.setString('userImage', _image);
             setState(() {
@@ -302,7 +302,7 @@ _number.text==localStorage.getString('userNumber')
     'userAddress':_address.text.trim(),
     'userEmail':email,
     'userId':id,
-    'userGender':gender
+
   });
   await  localStorage.setString('userNumber', _number.text);
   await  localStorage.setString('userAddress', _address.text);

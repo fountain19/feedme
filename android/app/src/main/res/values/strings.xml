@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">feedme</string>
+    <string name="facebook_app_id">777093049616448</string>
+    <string name="fb_login_protocol_scheme">fb777093049616448</string>
+</resources>
+
+
