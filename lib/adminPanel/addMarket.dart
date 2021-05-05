@@ -17,20 +17,18 @@ import 'package:firebase_storage/firebase_storage.dart' ;
 
 
 
-
-
-class AddProduct extends StatefulWidget {
+class AddMarket extends StatefulWidget {
   @override
-  _AddProductState createState() => _AddProductState();
+  _AddMarketState createState() => _AddMarketState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _AddMarketState extends State<AddMarket> {
 
 
-  TextEditingController productNameController = TextEditingController();
   TextEditingController marketNameController = TextEditingController();
-  TextEditingController productPriceController = TextEditingController();
-
+  TextEditingController marketLessPriceController = TextEditingController();
+  TextEditingController marketDescriptionController = TextEditingController();
+  TextEditingController marketTimeController = TextEditingController();
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   File _image;
@@ -96,18 +94,26 @@ class _AddProductState extends State<AddProduct> {
                 height: 10.0,
               ),
               productTextField(
-                  textTitle: 'Product Name',
-                  textHint: 'Enter Product Name',
-                  controller: productNameController),
-
+                  textTitle: 'Market Less Price',textType: TextInputType.number,
+                  textHint: 'Enter Market Price',
+                  controller: marketLessPriceController),
               SizedBox(
                 height: 10.0,
               ),
-              productTextField(
-                  textTitle: 'Product Price',textType: TextInputType.number,
-                  textHint: 'Enter Product Price',
-                  controller: productPriceController),
 
+              productTextField(
+                  textTitle: 'Market Description',
+                  textHint: 'Enter Market Description',
+                  controller: marketDescriptionController),
+              SizedBox(
+                height: 10.0,
+              ),
+
+              productTextField(
+                  textTitle: 'Market Time',
+                  textHint: 'Enter Product Calories',
+                  controller: marketTimeController,
+                  textType: TextInputType.number),
 
               SizedBox(height: 20,),
               RaisedButton(
@@ -119,26 +125,29 @@ class _AddProductState extends State<AddProduct> {
                     showSnackBar('Product Image can\'t be empty', scaffoldKey);
                     return;
                   }
-                  if(productNameController.text==''){
-                    showSnackBar('Product Name can\'t be empty', scaffoldKey);
+                  if(marketNameController.text==''){
+                    showSnackBar('Product Title can\'t be empty', scaffoldKey);
                     return;
                   }
-
-                  if(productPriceController.text==''){
+                  if(marketLessPriceController.text==''){
                     showSnackBar('product Price can\'t be empty', scaffoldKey);
                     return;
                   }
-                  if(marketNameController.text==''){
-                    showSnackBar('Market Name can\'t be empty', scaffoldKey);
+                  if(marketDescriptionController.text==''){
+                    showSnackBar('product Description can\'t be empty', scaffoldKey);
+                    return;
+                  }
+                  if(marketTimeController.text==''){
+                    showSnackBar('product Calories can\'t be empty', scaffoldKey);
                     return;
                   }
 
-                  displayProgressDialog(context);
+                    displayProgressDialog(context);
                   uploadImageUrlAndSaveToFireStore();
 
 
                 },
-                child: Text('Add Product'),),
+                child: Text('Add Market'),),
 
             ],
           ),
@@ -160,51 +169,51 @@ class _AddProductState extends State<AddProduct> {
 
   Widget productImage() {
     return Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15),
-        child: _image == null
-            ? Container()
-            : SizedBox(
-          height: 150.0,
-          child: Stack(
-            children: <Widget>[
-              Container(
-                width: 150.0,
-                height: 150.0,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withAlpha(100),
-                  borderRadius:
-                  BorderRadius.all(Radius.circular(15.0)),
-                  image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: FileImage(_image)),
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      child: _image == null
+          ? Container()
+          : SizedBox(
+        height: 150.0,
+        child: Stack(
+                  children: <Widget>[
+                    Container(
+                      width: 150.0,
+                      height: 150.0,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withAlpha(100),
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(15.0)),
+                        image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: FileImage(_image)),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.red[600],
+                        child: IconButton(
+                          color: Colors.red,
+                          icon: Icon(
+                            Icons.clear,
+                            color: Colors.white,
+                          ), onPressed: () {
+                          removeImage();
+                        },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5),
-                child: CircleAvatar(
-                  backgroundColor: Colors.red[600],
-                  child: IconButton(
-                    color: Colors.red,
-                    icon: Icon(
-                      Icons.clear,
-                      color: Colors.white,
-                    ), onPressed: () {
-                    removeImage();
-                  },
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-    );
+    )
+            );
 
   }
 
   removeImage() async {
-    setState(() {
-      _image=null;
-    });
+   setState(() {
+     _image=null;
+   });
   }
 
 
@@ -212,51 +221,52 @@ class _AddProductState extends State<AddProduct> {
 
 
 // this method for starting upload photo to storage fire base
-  void uploadImageUrlAndSaveToFireStore() async {
-    final Reference productRef = FirebaseStorage.instance
-        .ref()
-        .child('Product Image').child(postId);
-    final UploadTask uploadTask = productRef.putFile(_image);
-    uploadTask.then((TaskSnapshot task) {
-      task.ref.getDownloadURL().then((_image){
-        FirebaseFirestore.instance.collection('Products').doc(postId).set(
-            {
-              'productImage':_image,
-              'marketName': marketNameController.text,
-              'productName': productNameController.text,
-              'productPrice': productPriceController.text,
+ void uploadImageUrlAndSaveToFireStore() async {
+   final Reference marketRef = FirebaseStorage.instance
+       .ref()
+       .child('Logo').child(postId);
+ final UploadTask uploadTask = marketRef.putFile(_image);
+ uploadTask.then((TaskSnapshot task) {
+   task.ref.getDownloadURL().then((_image){
+     FirebaseFirestore.instance.collection('MarketName').doc(postId).set(
+         {
+           'marketLogo':_image,
+           'marketName': marketNameController.text,
+           'marketLessPrice': marketLessPriceController.text,
+           'marketTime': marketTimeController.text,
+           'marketDescription': marketDescriptionController.text,
+         }
+     ).whenComplete((){
 
-            }
-        ).whenComplete((){
+       closeProgressDialog(context);
+       showSnackBar('The market added successfully', scaffoldKey);
+       resetEverything();
+       Navigator.push(context, MaterialPageRoute(builder: (context){
+         return AdminHome();
+       }));
+     }).catchError((error){
 
-          closeProgressDialog(context);
-          showSnackBar('The product added successfully', scaffoldKey);
-          resetEverything();
-          Navigator.push(context, MaterialPageRoute(builder: (context){
-            return AdminHome();
-          }));
-        }).catchError((error){
+       closeProgressDialog(context);
+       showSnackBar('Error is : ${error.toString()}', scaffoldKey);
 
-          closeProgressDialog(context);
-          showSnackBar('Error is : ${error.toString()}', scaffoldKey);
+     });
+   } );
+ }).catchError((error){
 
-        });
-      } );
-    }).catchError((error){
+     closeProgressDialog(context);
 
-      closeProgressDialog(context);
-
-      showSnackBar('Error is : ${error.toString()}', scaffoldKey);
-    });
+   showSnackBar('Error is : ${error.toString()}', scaffoldKey);
+ });
   }
 
 
 
   void resetEverything() {
     _image=null;
-    productNameController.text ='';
     marketNameController.text ='';
-    productPriceController.text='';
+    marketLessPriceController.text='';
+    marketDescriptionController.text='';
+     marketTimeController.text='';
 
     setState(() {
     });

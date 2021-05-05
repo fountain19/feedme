@@ -1,15 +1,15 @@
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:feedme/model/Product.dart';
+import 'package:feedme/model/product.dart';
 import 'package:feedme/widget/productTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class EditProduct extends StatefulWidget {
- Product product ;
- EditProduct({this.product});
+  Product product ;
+  EditProduct({this.product});
 
   @override
   _EditProductState createState() => _EditProductState();
@@ -17,12 +17,10 @@ class EditProduct extends StatefulWidget {
 
 class _EditProductState extends State<EditProduct> {
 
-  TextEditingController productNameController = TextEditingController();
+  TextEditingController marketNameController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
-  TextEditingController productDescriptionController = TextEditingController();
-  TextEditingController productWeightController = TextEditingController();
-  TextEditingController productCaloriesController = TextEditingController();
-  TextEditingController productComponentsController = TextEditingController();
+  TextEditingController productNameController = TextEditingController();
+
 
   final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -33,7 +31,7 @@ class _EditProductState extends State<EditProduct> {
 
   @override
   Widget build(BuildContext context) {
-    // Product products=ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -78,9 +76,9 @@ class _EditProductState extends State<EditProduct> {
                 height: 10.0,
               ),
               productTextField(
-                  textTitle: 'Product Name',
-                  textHint: 'Enter Product Name',
-                  controller: productNameController),
+                  textTitle: 'Market Name',
+                  textHint: 'Enter Market Name',
+                  controller: marketNameController),
 
               SizedBox(
                 height: 10.0,
@@ -94,37 +92,10 @@ class _EditProductState extends State<EditProduct> {
               ),
 
               productTextField(
-                  textTitle: 'Product Description',
-                  textHint: 'Enter Product Description',
-                  controller: productDescriptionController),
-              SizedBox(
-                height: 10.0,
-              ),
-              productTextField(
-                  textTitle: 'Product weight',
-                  textHint: 'Enter Product weight',
-                  controller: productWeightController,
-                  textType: TextInputType.number),
-              SizedBox(
-                height: 10.0,
-              ),
+                  textTitle: 'Product name',
+                  textHint: 'Enter Product name',
+                  controller: productNameController),
 
-              productTextField(
-                  textTitle: 'Product Calories',
-                  textHint: 'Enter Product Calories',
-                  controller: productCaloriesController,
-                  textType: TextInputType.number),
-              SizedBox(
-                height: 10.0,
-              ),
-              productTextField(
-                  textTitle: 'Product Components',
-                  textHint: 'Enter Product Components',
-                  controller: productComponentsController,
-                  textType: TextInputType.text),
-              SizedBox(
-                height: 10.0,
-              ),
               SizedBox(height: 20,),
               RaisedButton(
                 color: Color(0xFFebb775),
@@ -135,47 +106,34 @@ class _EditProductState extends State<EditProduct> {
                     showSnackBar('Product Image can\'t be empty', scaffoldKey);
                     return;
                   }
-                  if(productNameController.text==''){
-                    showSnackBar('Product Title can\'t be empty', scaffoldKey);
+                  if(marketNameController.text==''){
+                    showSnackBar('Market Title can\'t be empty', scaffoldKey);
                     return;
                   }
                   if(productPriceController.text==''){
                     showSnackBar('product Price can\'t be empty', scaffoldKey);
                     return;
                   }
-                  if(productDescriptionController.text==''){
-                    showSnackBar('product Description can\'t be empty', scaffoldKey);
-                    return;
-                  }
-                  if(productWeightController.text==''){
-                    showSnackBar('product Weight can\'t be empty', scaffoldKey);
-                    return;
-                  }
-                  if(productCaloriesController.text==''){
-                    showSnackBar('product Calories can\'t be empty', scaffoldKey);
-                    return;
-                  }
-                  if(productComponentsController.text==''){
-                    showSnackBar('product Components can\'t be empty', scaffoldKey);
+                  if(productNameController.text==''){
+                    showSnackBar('product Name can\'t be empty', scaffoldKey);
                     return;
                   }
 
-                  firestore.collection('product info').doc(postId).update(
-                    {
-                      'productImage':_image,
-                      'productName': productNameController.text,
-                      'productPrice': productPriceController.text,
-                      'productDescription': productDescriptionController.text,
-                      'productWeight': productWeightController.text,
-                      'productCalories': productCaloriesController.text,
-                      'productComponents': productComponentsController.text,
-                    }
-                     );
+
+                  firestore.collection('Products').doc(postId).update(
+                      {
+                        'productImage':_image,
+                        'marketName': marketNameController.text,
+                        'productPrice': productPriceController.text,
+                        'productName': productNameController.text,
+
+                      }
+                  );
 
 
 
                 },
-                child: Text('Add Product'),),
+                child: Text('Update product'),),
 
             ],
           ),
@@ -243,12 +201,10 @@ class _EditProductState extends State<EditProduct> {
   }
   void resetEverything() {
     _image=null;
-    productNameController.text ='';
+    marketNameController.text ='';
     productPriceController.text='';
-    productDescriptionController.text='';
-    productWeightController.text='';
-    productCaloriesController.text='';
-    productComponentsController.text='';
+    productNameController.text='';
+
     setState(() {
     });
   }

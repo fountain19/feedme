@@ -1,53 +1,42 @@
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:feedme/adminPanel/adminHome.dart';
+import 'package:feedme/model/market.dart';
 import 'package:feedme/widget/productTextField.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-
-
 import 'package:uuid/uuid.dart';
-import 'package:firebase_storage/firebase_storage.dart' ;
 
+class EditMarket extends StatefulWidget {
+ Market market ;
+ EditMarket({this.market});
 
-
-
-
-
-
-
-
-class AddProduct extends StatefulWidget {
   @override
-  _AddProductState createState() => _AddProductState();
+  _EditMarketState createState() => _EditMarketState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _EditMarketState extends State<EditMarket> {
 
-
-  TextEditingController productNameController = TextEditingController();
   TextEditingController marketNameController = TextEditingController();
-  TextEditingController productPriceController = TextEditingController();
+  TextEditingController marketLessPriceController = TextEditingController();
+  TextEditingController marketDescriptionController = TextEditingController();
+  TextEditingController marketTimeController = TextEditingController();
 
 
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   File _image;
-  final picker = ImagePicker();
-
-// this verbal for give id user post
   String postId = Uuid().v4();
-
+  final picker = ImagePicker();
+  final FirebaseFirestore firestore =FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-
-    final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-
+    // Product products=ModalRoute.of(context).settings.arguments;
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+
         backgroundColor: Color(0xFF2c425e),
         elevation: 0.0,
         actions: <Widget>[
@@ -76,8 +65,8 @@ class _AddProductState extends State<AddProduct> {
         ],
       ),
       backgroundColor: Color(0xFF2c425e),
-      body:
-      ListView(
+
+      body: ListView(
         children: <Widget>[
 
           Column(
@@ -96,18 +85,25 @@ class _AddProductState extends State<AddProduct> {
                 height: 10.0,
               ),
               productTextField(
-                  textTitle: 'Product Name',
-                  textHint: 'Enter Product Name',
-                  controller: productNameController),
+                  textTitle: 'Market Price',textType: TextInputType.number,
+                  textHint: 'Enter Market Price',
+                  controller: marketLessPriceController),
+              SizedBox(
+                height: 10.0,
+              ),
 
+              productTextField(
+                  textTitle: 'Market Description',
+                  textHint: 'Enter Market Description',
+                  controller: marketDescriptionController),
               SizedBox(
                 height: 10.0,
               ),
               productTextField(
-                  textTitle: 'Product Price',textType: TextInputType.number,
-                  textHint: 'Enter Product Price',
-                  controller: productPriceController),
-
+                  textTitle: 'Market time',
+                  textHint: 'Enter Market time',
+                  controller: marketTimeController,
+                  textType: TextInputType.number),
 
               SizedBox(height: 20,),
               RaisedButton(
@@ -116,29 +112,41 @@ class _AddProductState extends State<AddProduct> {
                   // if (_globalKey.currentState.validate()) {
                   // _globalKey.currentState.save();
                   if(_image==null){
-                    showSnackBar('Product Image can\'t be empty', scaffoldKey);
-                    return;
-                  }
-                  if(productNameController.text==''){
-                    showSnackBar('Product Name can\'t be empty', scaffoldKey);
-                    return;
-                  }
-
-                  if(productPriceController.text==''){
-                    showSnackBar('product Price can\'t be empty', scaffoldKey);
+                    showSnackBar('Market Image can\'t be empty', scaffoldKey);
                     return;
                   }
                   if(marketNameController.text==''){
-                    showSnackBar('Market Name can\'t be empty', scaffoldKey);
+                    showSnackBar('Market Title can\'t be empty', scaffoldKey);
+                    return;
+                  }
+                  if(marketLessPriceController.text==''){
+                    showSnackBar('Market Price can\'t be empty', scaffoldKey);
+                    return;
+                  }
+                  if(marketDescriptionController.text==''){
+                    showSnackBar('Market Description can\'t be empty', scaffoldKey);
+                    return;
+                  }
+                  if(marketTimeController.text==''){
+                    showSnackBar('Market time can\'t be empty', scaffoldKey);
                     return;
                   }
 
-                  displayProgressDialog(context);
-                  uploadImageUrlAndSaveToFireStore();
+
+                  firestore.collection('MarketName').doc(postId).update(
+                      {
+                        'marketLogo': _image,
+                        'marketName': marketNameController.text,
+                        'marketLessPrice': marketLessPriceController.text,
+                        'marketDescription': marketDescriptionController.text,
+                        'marketTime': marketTimeController.text,
+
+                      });
+
 
 
                 },
-                child: Text('Add Product'),),
+                child: Text('Update market'),),
 
             ],
           ),
@@ -157,7 +165,6 @@ class _AddProductState extends State<AddProduct> {
 
     });
   }
-
   Widget productImage() {
     return Padding(
         padding: const EdgeInsets.only(left: 15, right: 15),
@@ -200,63 +207,17 @@ class _AddProductState extends State<AddProduct> {
     );
 
   }
-
   removeImage() async {
     setState(() {
       _image=null;
     });
   }
-
-
-
-
-
-// this method for starting upload photo to storage fire base
-  void uploadImageUrlAndSaveToFireStore() async {
-    final Reference productRef = FirebaseStorage.instance
-        .ref()
-        .child('Product Image').child(postId);
-    final UploadTask uploadTask = productRef.putFile(_image);
-    uploadTask.then((TaskSnapshot task) {
-      task.ref.getDownloadURL().then((_image){
-        FirebaseFirestore.instance.collection('Products').doc(postId).set(
-            {
-              'productImage':_image,
-              'marketName': marketNameController.text,
-              'productName': productNameController.text,
-              'productPrice': productPriceController.text,
-
-            }
-        ).whenComplete((){
-
-          closeProgressDialog(context);
-          showSnackBar('The product added successfully', scaffoldKey);
-          resetEverything();
-          Navigator.push(context, MaterialPageRoute(builder: (context){
-            return AdminHome();
-          }));
-        }).catchError((error){
-
-          closeProgressDialog(context);
-          showSnackBar('Error is : ${error.toString()}', scaffoldKey);
-
-        });
-      } );
-    }).catchError((error){
-
-      closeProgressDialog(context);
-
-      showSnackBar('Error is : ${error.toString()}', scaffoldKey);
-    });
-  }
-
-
-
   void resetEverything() {
     _image=null;
-    productNameController.text ='';
     marketNameController.text ='';
-    productPriceController.text='';
+    marketLessPriceController.text='';
+    marketDescriptionController.text='';
+    marketTimeController.text='';
 
     setState(() {
     });
@@ -291,5 +252,6 @@ class _AddProductState extends State<AddProduct> {
   closeProgressDialog(BuildContext context) {
     Navigator.pop(context);
   }
+
 
 }

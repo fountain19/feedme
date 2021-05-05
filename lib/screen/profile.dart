@@ -296,7 +296,7 @@ _number.text==localStorage.getString('userNumber')
 
 
   FirebaseFirestore.instance.collection('userData').doc(id).update({
-     // 'userImage':image==''?'':_image,
+     // 'userImage':image,
     'userName':_name.text.trim(),
     'userNumber':_number.text.trim(),
     'userAddress':_address.text.trim(),

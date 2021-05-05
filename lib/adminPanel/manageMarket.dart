@@ -1,50 +1,47 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:feedme/model/product.dart';
+import 'package:feedme/adminPanel/editMarket.dart';
+import 'package:feedme/model/market.dart';
 import 'package:feedme/widget/customMenu.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-import 'editProduct.dart';
+class MangeMarket extends StatefulWidget {
 
-class MangeProduct extends StatefulWidget {
-final String marketName;
-MangeProduct({this.marketName});
 
   @override
-  _MangeProductState createState() => _MangeProductState();
+  _MangeMarketState createState() => _MangeMarketState();
 }
 
-class _MangeProductState extends State<MangeProduct> {
-
+class _MangeMarketState extends State<MangeMarket> {
   final Reference productRef = FirebaseStorage.instance
       .ref()
-      .child('Product Image');
-  final FirebaseFirestore firestore =FirebaseFirestore.instance;
+      .child('Logo');
+final FirebaseFirestore firestore =FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context,) {
 
     return Scaffold(
       backgroundColor: Colors.blueGrey,
-      body:
-      StreamBuilder<QuerySnapshot>(
-          stream : firestore.collection('Products').snapshots(),
+      body: StreamBuilder<QuerySnapshot>(
+          stream : firestore.collection('MarketName').snapshots(),
 
           builder:(context,snapshot,) {
             if(snapshot.hasData){
 
-              List<Product> products =[];
+              List<Market> markets=[];
               for (var doc in snapshot.data.docs) {
 
                 var data = doc.data();
-                products.add(Product(
-                  id:doc.id,
-                  image: data['productImage'],
-                 marketName : data['marketName'],
-                  productName: data['productName'],
-                  price:data['productPrice'],
+                markets.add(Market(
+                    id:doc.id,
+                    image: data['marketLogo'],
+                    name: data['marketName'],
+                    lessPrice: data['marketLessPrice'],
+                    description: data['marketDescription'],
+                  time: data['marketTime'],
 
                 ));
               }
@@ -52,7 +49,7 @@ class _MangeProductState extends State<MangeProduct> {
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
                     childAspectRatio: 0.8),
 
-                itemCount: products.length,
+                itemCount: markets.length,
                 itemBuilder: (context, index) =>
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10.0),
@@ -69,17 +66,17 @@ class _MangeProductState extends State<MangeProduct> {
                                   child: Text('Edit'),
                                   onClick:()async{
                                     Navigator.push(context, MaterialPageRoute(builder: (context){
-                                      return EditProduct(product :products[index]);
+                                      return EditMarket(market :markets[index]);
                                     }));
                                   },
                                 ),
                                 MyPopupMenuItem(
                                   onClick: ()async{
                                     Navigator.pop(context);
-                                    firestore.collection('MarketName').doc(products[index].id).delete();
+                                    firestore.collection('MarketName').doc(markets[index].id).delete();
                                     Reference productRef = FirebaseStorage.instance
                                         .ref()
-                                        .child('Logo').child(products[index].id);
+                                        .child('Logo').child(markets[index].id);
                                     await productRef.delete();
 
                                   },
@@ -89,17 +86,14 @@ class _MangeProductState extends State<MangeProduct> {
                         child: Stack(
                           children: <Widget>[
                             Positioned.fill(
-                              child:
-                                   CachedNetworkImage(
-                                    imageUrl: products[index].image,
-                                    placeholder: (context, url) => CircularProgressIndicator(
-                                      backgroundColor: Colors.white,
-                                    ),
-                                    errorWidget: (context, url, error) => Icon(Icons.error),
-                                  ),
-
+                              child:    CachedNetworkImage(
+                        imageUrl: markets[index].image,
+                          placeholder: (context, url) => CircularProgressIndicator(
+                            backgroundColor: Colors.white,
+                          ),
+                          errorWidget: (context, url, error) => Icon(Icons.error),
+                        ),
                             ),
-
                             Positioned(
                               bottom: 0,
                               child: Opacity(
@@ -113,10 +107,10 @@ class _MangeProductState extends State<MangeProduct> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Text(products[index].marketName,style: TextStyle(
+                                        Text(markets[index].name,style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),),
-                                        Text('\$ ${products[index].price}'),
+                                        Text('\$ ${markets[index].lessPrice}'),
 
                                       ],
                                     ),

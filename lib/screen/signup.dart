@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feedme/adminPanel/adminHome.dart';
 
 
 import 'package:feedme/screen/homepage.dart';
@@ -52,7 +53,7 @@ class _SignUpState extends State<SignUp> {
  bool isMale=true;
 
  UserCredential authResult;
-
+  final admin = 'admin@gmail.com';
 
 
 
@@ -99,11 +100,19 @@ authResult = await FirebaseAuth.instance
    await localStorage.setString('userName', _name.text);
    await localStorage.setString('userId', authResult.user.uid);
 
+   if(_email.text!=admin){
+     Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
+     setState(() {
+       isLOading=false;
+     });
+   }
+   else{
+     Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>AdminHome()));
+     setState(() {
+       isLOading=false;
+     });
+   }
 
-   Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx)=>HomePage()));
-   setState(() {
-     isLOading=false;
-   });
  }
 
   void vaildation() {

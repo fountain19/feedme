@@ -1,8 +1,11 @@
 
-import 'package:feedme/main.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:feedme/model/market.dart';
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
 import 'package:feedme/screen/detailScreen.dart';
+import 'package:feedme/screen/marketContent.dart';
 import 'package:feedme/screen/order.dart';
 import 'package:feedme/screen/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import 'login.dart';
 
@@ -21,7 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
+  String postId = Uuid().v4();
   GoogleSignIn _googleSignIn = GoogleSignIn();
   String finalName='';
   String finalEmail='';
@@ -44,8 +48,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
 
 
-
-
+final height=MediaQuery.of(context).size.height;
+final width=MediaQuery.of(context).size.width;
 
 
     final GlobalKey<ScaffoldState> scaffold = GlobalKey<ScaffoldState>();
@@ -58,7 +62,7 @@ class _HomePageState extends State<HomePage> {
           }));
         },
         child: Container(
-          height: 200,width: 150,
+          height: height*.5,width: width*.45,
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)
@@ -82,213 +86,58 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    Widget bottomCard({String image,String name,String rating,String price})
-    {
-      return Stack(
-        alignment: Alignment.topRight,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 30),
-            child: Container(
-              height: 200,width: 150,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)
-                ),
-                color: Color(0xff193044),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-
-                      Text(name, style: TextStyle(
-                          fontSize: 25.0,color: Colors.white,
-                          fontWeight:FontWeight.bold
-                      ),),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.star,color: Colors.yellow,),
-                          Text(rating,style: TextStyle(
-                              fontSize: 10.0,color: Colors.blueGrey,
-                              fontWeight:FontWeight.bold
-                          ),),
-                          Text(price,style: TextStyle(
-                              fontSize: 15.0,color: Colors.blue,
-                              fontWeight:FontWeight.bold
-                          ),)
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage('images/$image.jpg'),
-          ),
-        ],
-      );
-    }
-
-
-
     return Scaffold(
+
+      backgroundColor: Colors.blueGrey,
       key: scaffold,
       body:
-      Container(
-        color:Color(0xff193044),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
+      SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: Color(0xff193044),
               child: Column(
                 children: [
                   Container(
-                    color: Color(0xff193044),
-                    child: Column(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+                    height: height*.10,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-                          height: 20.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                          GestureDetector(
-                              child:Icon(Icons.sort,size: 40,color: Colors.white,)
-                              , onTap:(){
-                                scaffold.currentState.openDrawer();
-                          }),
-                              GestureDetector(
-                                  child:Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
-                                  , onTap:(){
-                                Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                                  return OrderScreen();
-                                }));
-                              }),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-                          height: 85.0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CircleAvatar(
-                                radius: 45,backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: AssetImage('images/man.jpg'),
-                                ),
-                              ),
-                              Container(
-                                child: Text('We are at your service',
-                                style: TextStyle(
-                                  fontSize: 20.0,color: Colors.white,
-                                    fontWeight:FontWeight.bold
-                                ),),
-                              )
-                            ],
-                          ),
-                        ),
+                    GestureDetector(
+                        child:Icon(Icons.sort,size: 40,color: Colors.white,)
+                        , onTap:(){
+                          scaffold.currentState.openDrawer();
+                    }),
+                        GestureDetector(
+                            child:Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
+                            , onTap:(){
+                          Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                            return OrderScreen();
+                          }));
+                        }),
                       ],
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
-                    color: Theme.of(context).accentColor,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+                    height: height*.15,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          color:Theme.of(context).accentColor ,
-                          width: double.infinity,
-                          height: 225.0,
-                          child: Column(
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Container(
-                                  height: 200,
-                                  child: Row(
-                                    children: [
-                                      buildCard(image: 'pizza',title: 'pizza'),
-                                      buildCard(image: 'burgur',title: 'burgur'),
-                                      buildCard(image: 'sandwish',title: 'sandwish'),
-                                      buildCard(image: 'patato',title: 'patato'),
-                                      buildCard(image: 'salad',title: 'salad')
-                                    ],
-                                  ),
-
-                                ),
-                              )
-                            ],
-                          )
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Featured',style: TextStyle(color: Colors.white,
-                            fontSize: 25,fontWeight: FontWeight.bold),),
-                            Text('View all',style: TextStyle(color: Colors.white,
-                                fontSize: 15,fontWeight: FontWeight.bold),),
-                          ],
+                        CircleAvatar(
+                          radius: 45,backgroundColor: Colors.white,
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundImage: AssetImage('images/man.jpg'),
+                          ),
                         ),
                         Container(
-                          color:Theme.of(context).accentColor ,
-                          width: double.infinity,
-                          height: 250.0,
-                          child: Column(
-                            children: [
-                            SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Container(
-                                height: 250,
-                                child: Row(
-                                  children: [
-                                    bottomCard(
-                                      image: "pizza",
-                                      name: 'pizza',
-                                      price: '\$50',
-
-                                      rating: '4.5 Rating'
-                                    ),
-                                    bottomCard(
-                                        image: "burgur",
-                                        name: 'burgur',
-                                        price: '\$35',
-
-                                        rating: '5 Rating'
-                                    ),
-                                    bottomCard(
-                                        image: "patato",
-                                        name: 'patato',
-                                        price: '\$10',
-
-                                        rating: '3.5 Rating'
-                                    ),
-                                    bottomCard(
-                                        image: "sandwish",
-                                        name: 'sandwish',
-                                        price: '\$25',
-
-                                        rating: '1.5 Rating'
-                                    ),
-                                    bottomCard(
-                                        image: "salad",
-                                        name: 'salad',
-                                        price: '\$4',
-
-                                        rating: '2 Rating'
-                                    ),
-                                  ]),
-                            ))],
-                          )
+                          child: Text('We are at your service',
+                          style: TextStyle(
+                            fontSize: 20.0,color: Colors.white,
+                              fontWeight:FontWeight.bold
+                          ),),
                         )
                       ],
                     ),
@@ -296,7 +145,216 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+              color: Theme.of(context).accentColor,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    color:Theme.of(context).accentColor ,
+                    width: double.infinity,
+                    height: height*.3,
+                    child: Column(
+                      children: [
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                            height: height*.3,
+                            child: Row(
+                              children: [
+                                buildCard(image: 'pizza',title: 'pizza'),
+                                buildCard(image: 'burgur',title: 'burgur'),
+                                buildCard(image: 'sandwish',title: 'sandwish'),
+                                buildCard(image: 'patato',title: 'patato'),
+                                buildCard(image: 'salad',title: 'salad')
+                              ],
+                            ),
+                          )
+                        )
+                      ],
+                    )
+                  ),
+                  Align(
+                    alignment:Alignment.topLeft ,
+                    child: Text('Restaurants',style: TextStyle(
+                        color: Colors.white,fontWeight: FontWeight.bold,
+                        fontSize: 25
+                    ),),
+                  ),
+                  SingleChildScrollView(
+                    physics: ScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: [
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection('MarketName').snapshots(),
+                            builder: (BuildContext context,AsyncSnapshot<QuerySnapshot> snapshot){
+                              List<Market> markets=[];
+                              if (snapshot.hasError) {
+
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 16),
+                                    child: Text('Error: ${snapshot.error}'),
+                                  );
+
+
+                              } else {
+                                switch (snapshot.connectionState) {
+                                  case ConnectionState.none:
+
+                                      const Padding(
+                                        padding: EdgeInsets.only(top: 16),
+                                        child: Text('Select a lot'),
+                                      );
+
+                                    break;
+                                  case ConnectionState.waiting:
+
+                                      SizedBox(
+                                        child: const CircularProgressIndicator(),
+                                        width: 60,
+                                        height: 60,
+                                      );
+
+                                    break;
+                                  case ConnectionState.active:
+                                    for (var doc in snapshot.data.docs) {
+
+                                      markets.add(Market(
+                                          image: doc['marketLogo'],
+                                          lessPrice: doc['marketLessPrice'],
+                                          name: doc['marketName'],
+                                          description: doc['marketDescription'],
+                                          time: doc['marketTime'],
+
+                                      ));
+                                    }
+
+                                    break;
+                                  case ConnectionState.done:
+
+
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 16),
+                                        child: Text('\$${snapshot.data} (closed)'),
+                                      );
+
+                                    break;
+                                }
+                              }
+                              return  ListView.builder(
+
+                                scrollDirection: Axis.vertical,
+                                  itemCount:markets.length ,
+                                  physics: ScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (context,index){
+                                    return Padding(
+                                      padding:  EdgeInsets.all(10),
+                                      child: GestureDetector(
+                                        onTap: (){
+                                          Navigator.push(context, (MaterialPageRoute(
+                                            builder: (context)=>MarketContent(marketName:markets[index].name)
+                                          )));
+                                        },
+                                        child: Container(
+                                          height: height*.25,
+                                          width: width*.1,
+                                          decoration:BoxDecoration(
+                                            color: Color(0xff193044),
+                                            borderRadius: BorderRadius.circular(25)
+                                          ),
+                                          padding: EdgeInsets.symmetric(horizontal: 20),
+                                          child: Row(
+                                            children: [
+                                             Container(
+                                               height:height*.20,
+                                              width: width*0.25,
+                                               child: Card(
+                                                 color: Color(0xff193044),
+                                                 child:CachedNetworkImage(
+                                                   imageUrl: markets[index].image,
+                                                   placeholder: (context, url) => CircularProgressIndicator(
+                                                     backgroundColor: Colors.white,
+                                                   ),
+                                                   errorWidget: (context, url, error) => Icon(Icons.error),
+                                                 ),
+                                                 // Image(
+                                                 //   fit: BoxFit.cover,
+                                                 //   image: NetworkImage(markets[index].image),
+                                                 // ),
+                                               ),
+                                             ),
+                                              Padding(
+                                                padding:  EdgeInsets.fromLTRB(10, 0, 10, 20),
+                                                child: Column(
+                                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(markets[index].name,style: TextStyle(
+                                                      color: Colors.white,fontSize: 25,fontWeight: FontWeight.bold
+                                                    ),),
+                                                    Container(
+                                                      width:width*.3,
+                                                      child: Text(
+                                                        markets[index].description,
+                                                          maxLines: 3,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: TextStyle(
+                                                          color: Colors.white38,fontSize: 15
+                                                      ),),
+                                                    ),
+                                                    Row(mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Icon(Icons.access_time,color: Colors.white,),
+                                                            Text(markets[index].time,style: TextStyle(
+                                                                color: Colors.white
+                                                            ),),
+                                                            Text('mins',style: TextStyle(
+                                                              color: Colors.white
+                                                            ),)
+                                                          ],
+                                                        ),
+                                                        SizedBox(width: width*0.05),
+                                                        Column(children: [
+                                                        Row(
+                                                          children: [
+                                                          Text(markets[index].lessPrice,style: TextStyle(
+                                                              color: Colors.white
+                                                          ),),
+                                                          SizedBox(width: width*0.01,),
+                                                          Text('tl',style: TextStyle(
+                                                              color: Colors.white
+                                                          ),),
+                                                        ],),
+                                                          Text('min order',style: TextStyle(
+                                                              color: Colors.white
+                                                          ),)
+                                                        ],),
+
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            }),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       drawer: Container(
