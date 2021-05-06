@@ -5,6 +5,9 @@ import 'package:feedme/model/product.dart';
 import 'package:feedme/widget/customMenu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+
+import 'order.dart';
 
 class MarketContent extends StatefulWidget {
   final String marketName;
@@ -15,6 +18,29 @@ class MarketContent extends StatefulWidget {
 }
 
 class _MarketContentState extends State<MarketContent> {
+
+  PhotoViewController controller;
+  double scaleCopy;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = PhotoViewController();
+
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  void listener(PhotoViewControllerValue value){
+    setState((){
+      scaleCopy = value.scale;
+    });
+  }
+
   final FirebaseFirestore firestore =FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
@@ -44,7 +70,10 @@ class _MarketContentState extends State<MarketContent> {
             child: Row(
               children: [
                 IconButton(icon: Icon(Icons.shopping_cart,color: Colors.white,)
-                    , onPressed: (){}),
+                    , onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                      return OrderScreen();
+                    }));}),
                 IconButton(icon: Icon(Icons.search,color: Colors.white,)
                     , onPressed: (){}),
               ],
@@ -80,19 +109,52 @@ class _MarketContentState extends State<MarketContent> {
                       itemBuilder: (context, index) =>
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10,vertical: 10.0),
-                            child: GestureDetector(
-                              onTap: (){},
-                              child: Stack(
-                                children: <Widget>[
-                                  Positioned.fill(
-                                    child:
-                                    Container(
+                            child: Stack(
+                              children: <Widget>[
+                                Positioned.fill(
+                                  child:
+                                  GestureDetector(
+                                    onTap: (){
+                                      showDialog(
+                                          context: context,
+                                          builder:(_){
+                                            return Container(
+
+                                              child: Stack(
+                                                children: [
+                                                  PhotoView(
+                                                    imageProvider: NetworkImage(products[index].image),
+                                                    controller: controller,
+                                                  ),
+                                                  Positioned(
+                                                    right: 0.0,top: 0.0,
+                                                    child: Material(
+                                                      child: CircleAvatar(
+                                                        radius: 25,
+                                                        backgroundColor: Colors.red,
+                                                        child: Center(
+                                                          child: IconButton(
+                                                            icon: Icon(Icons.close,color: Colors.white,),
+                                                            onPressed: (){
+                                                              Navigator.pop(context);
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            );
+                                          } );
+                                    },
+                                    child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(25),
                                       ),
 
-                                      child: CachedNetworkImage(
+                                      child:CachedNetworkImage(
                                         imageUrl: products[index].image,
                                         placeholder: (context, url) => CircularProgressIndicator(
                                           backgroundColor: Colors.white,
@@ -100,41 +162,67 @@ class _MarketContentState extends State<MarketContent> {
                                         errorWidget: (context, url, error) => Icon(Icons.error),
                                       ),
                                     ),
-
                                   ),
 
-                                  Positioned(
-                                    bottom: 0,
-                                    child: Opacity(
-                                      opacity: 0.6,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey,
-                                          borderRadius: BorderRadius.circular(25),
+                                ),
+
+                                Positioned(
+                                  bottom: 0,
+                                  child: Opacity(
+                                    opacity: 0.9,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color(0xff193044),
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft:Radius.circular(25),
                                         ),
-                                        height: 60.0,
+                                      ),
+                                      height: height*.07,
+                                      width: width*.8,
+                                      child: Padding(
+                                        padding:  EdgeInsets.all(8.0),
+                                        child: Row(
 
-                                        width: MediaQuery.of(context).size.width,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(products[index].productName,style: TextStyle(
-                                                fontWeight: FontWeight.bold,color: Colors.white
-                                              ),),
-                                              Text('\$ ${products[index].price}',style: TextStyle(
-                                                  color: Colors.white
-                                              ),),
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(products[index].productName,style: TextStyle(
+                                                    fontWeight: FontWeight.bold,color: Colors.white
+                                                ),),
+                                                Text('\$ ${products[index].price}',style: TextStyle(
+                                                    color: Colors.white
+                                                ),),
 
-                                            ],
-                                          ),
+                                              ],
+                                            ),
+                                             SizedBox(width: width*0.08,),
+                                            GestureDetector(
+                                              onTap: (){},
+                                              child: Container(
+                                                height: height*0.1,
+                                                width: width*.15,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                  borderRadius: BorderRadius.circular(25)
+                                                  ),
+                                                child: Center(
+                                                  child: Text(
+                                                    'Add',style: TextStyle(
+                                                    color: Colors.white
+                                                  ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
 
                           ) ,
