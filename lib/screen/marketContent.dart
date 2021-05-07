@@ -1,11 +1,18 @@
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/model/product.dart';
-import 'package:feedme/widget/customMenu.dart';
+import 'package:feedme/provider/counter.dart';
+
+import 'package:feedme/screen/addToBasket.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:provider/provider.dart';
+
+
 
 import 'order.dart';
 
@@ -44,6 +51,7 @@ class _MarketContentState extends State<MarketContent> {
   final FirebaseFirestore firestore =FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
+    final String itemCount= Provider.of<ItemCount>(context).item.toString();
     final height=MediaQuery.of(context).size.height;
     final width=MediaQuery.of(context).size.width;
     return Scaffold(
@@ -69,11 +77,31 @@ class _MarketContentState extends State<MarketContent> {
             width: width*.27,
             child: Row(
               children: [
-                IconButton(icon: Icon(Icons.shopping_cart,color: Colors.white,)
-                    , onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                      return OrderScreen();
-                    }));}),
+                Stack(
+                  children: [
+
+                    IconButton(icon: Icon(Icons.shopping_cart,color: Colors.white,)
+                        , onPressed: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                            return OrderScreen();
+                          }));
+                        }),
+                    itemCount != null? Align(
+                  alignment: Alignment.topRight,
+                  child: CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.redAccent,
+                    child: Text(itemCount,style: TextStyle(
+                        color: Colors.white
+                    ),),
+                  ),
+                ):CircleAvatar(
+                  radius: 0.00,
+                      child: Text(''),
+                )
+                  ],
+                ),
+
                 IconButton(icon: Icon(Icons.search,color: Colors.white,)
                     , onPressed: (){}),
               ],
@@ -101,6 +129,8 @@ class _MarketContentState extends State<MarketContent> {
                 ));
               }
                   if(products[0].marketName==widget.marketName){
+
+
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
                           childAspectRatio: 0.8),
@@ -128,17 +158,15 @@ class _MarketContentState extends State<MarketContent> {
                                                   ),
                                                   Positioned(
                                                     right: 0.0,top: 0.0,
-                                                    child: Material(
+                                                    child: GestureDetector(
+                                                      onTap: (){
+                                                        Navigator.pop(context);
+                                                      },
                                                       child: CircleAvatar(
                                                         radius: 25,
                                                         backgroundColor: Colors.red,
                                                         child: Center(
-                                                          child: IconButton(
-                                                            icon: Icon(Icons.close,color: Colors.white,),
-                                                            onPressed: (){
-                                                              Navigator.pop(context);
-                                                            },
-                                                          ),
+                                                          child:Icon(Icons.close,color: Colors.white,),
                                                         ),
                                                       ),
                                                     ),
@@ -178,7 +206,7 @@ class _MarketContentState extends State<MarketContent> {
                                         ),
                                       ),
                                       height: height*.07,
-                                      width: width*.8,
+                                      width: width*.46,
                                       child: Padding(
                                         padding:  EdgeInsets.all(8.0),
                                         child: Row(
@@ -197,9 +225,14 @@ class _MarketContentState extends State<MarketContent> {
 
                                               ],
                                             ),
-                                             SizedBox(width: width*0.08,),
+                                          SizedBox(width: width*.015,),
                                             GestureDetector(
-                                              onTap: (){},
+                                              onTap: (){
+                                              Navigator.push(context, MaterialPageRoute(builder: (context){
+                                              return AddToBasket(product:
+                                                products[index]
+                                              );}));
+                                              },
                                               child: Container(
                                                 height: height*0.1,
                                                 width: width*.15,

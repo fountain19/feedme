@@ -2,6 +2,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/model/market.dart';
+
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
 import 'package:feedme/screen/detailScreen.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -101,22 +103,30 @@ final width=MediaQuery.of(context).size.width;
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
                     height: height*.10,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                    GestureDetector(
-                        child:Icon(Icons.sort,size: 40,color: Colors.white,)
-                        , onTap:(){
-                          scaffold.currentState.openDrawer();
-                    }),
-                        GestureDetector(
-                            child:Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
-                            , onTap:(){
-                          Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                            return OrderScreen();
-                          }));
-                        }),
-                      ],
+                    child: Padding(
+                      padding:  EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                      GestureDetector(
+                          child:Icon(Icons.sort,size: 40,color: Colors.white,)
+                          , onTap:(){
+                            scaffold.currentState.openDrawer();
+                      }),
+                          GestureDetector(
+                              child:Stack(
+                                children: [
+                                  Icon(Icons.shopping_cart,size: 40,color: Colors.white,)
+
+                                ],
+                              ),
+                              onTap:(){
+                            Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                              return OrderScreen();
+                            }));
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
