@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
 class ItemCount extends ChangeNotifier{
-
+List<int> count=[];
   int item;
-  void addCounter(int newValue){
+  void addItem(int newValue){
     item=newValue;
     notifyListeners();
   }
-
+void addCounter(int counter){
+    count.add(counter);
+    notifyListeners();
+}
 
 }

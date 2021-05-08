@@ -5,6 +5,9 @@
 
 
 import 'package:feedme/provider/counter.dart';
+import 'package:feedme/provider/marketInfo.dart';
+import 'package:feedme/provider/productInfo.dart';
+import 'package:feedme/provider/totalPrice.dart';
 import 'package:feedme/screen/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -31,7 +34,11 @@ class MyApp extends StatelessWidget {
     ]);
     return  MultiProvider(
       providers: [
-        ChangeNotifierProvider<ItemCount>(create: (_)=>ItemCount())
+        ChangeNotifierProvider<ItemCount>(create: (_)=>ItemCount()),
+        ChangeNotifierProvider<MarketInfo>(create: (_)=>MarketInfo()),
+        ChangeNotifierProvider<ProductInfo>(create: (_)=>ProductInfo()),
+        ChangeNotifierProvider<TotalPrice>(create: (_)=>TotalPrice()),
+
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

@@ -4,9 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/model/product.dart';
 import 'package:feedme/provider/counter.dart';
-
 import 'package:feedme/screen/addToBasket.dart';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
@@ -14,7 +12,7 @@ import 'package:provider/provider.dart';
 
 
 
-import 'order.dart';
+import 'EditCart.dart';
 
 class MarketContent extends StatefulWidget {
   final String marketName;
@@ -51,7 +49,8 @@ class _MarketContentState extends State<MarketContent> {
   final FirebaseFirestore firestore =FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
-    final String itemCount= Provider.of<ItemCount>(context).item.toString();
+     int itemCount= Provider.of<ItemCount>(context).item;
+
     final height=MediaQuery.of(context).size.height;
     final width=MediaQuery.of(context).size.width;
     return Scaffold(
@@ -83,22 +82,22 @@ class _MarketContentState extends State<MarketContent> {
                     IconButton(icon: Icon(Icons.shopping_cart,color: Colors.white,)
                         , onPressed: (){
                           Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                            return OrderScreen();
+                            return EditCart();
                           }));
                         }),
-                    itemCount != null? Align(
-                  alignment: Alignment.topRight,
-                  child: CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.redAccent,
-                    child: Text(itemCount,style: TextStyle(
-                        color: Colors.white
-                    ),),
-                  ),
-                ):CircleAvatar(
-                  radius: 0.00,
+                    itemCount==null? CircleAvatar(
+                  radius: 0.00001,
                       child: Text(''),
-                )
+                ):Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.redAccent,
+                        child: Text(itemCount.toString(),style: TextStyle(
+                            color: Colors.white
+                        ),),
+                      ),
+                    )
                   ],
                 ),
 
@@ -228,6 +227,7 @@ class _MarketContentState extends State<MarketContent> {
                                           SizedBox(width: width*.015,),
                                             GestureDetector(
                                               onTap: (){
+
                                               Navigator.push(context, MaterialPageRoute(builder: (context){
                                               return AddToBasket(product:
                                                 products[index]

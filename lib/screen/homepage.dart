@@ -2,18 +2,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/model/market.dart';
+import 'package:feedme/provider/counter.dart';
+import 'package:feedme/provider/marketInfo.dart';
 
 import 'package:feedme/screen/aboutPage.dart';
 import 'package:feedme/screen/contact.dart';
 import 'package:feedme/screen/detailScreen.dart';
 import 'package:feedme/screen/marketContent.dart';
-import 'package:feedme/screen/order.dart';
+import 'package:feedme/screen/EditCart.dart';
 import 'package:feedme/screen/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
@@ -49,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-
+    int itemCount= Provider.of<ItemCount>(context).item;
 final height=MediaQuery.of(context).size.height;
 final width=MediaQuery.of(context).size.width;
 
@@ -122,7 +125,7 @@ final width=MediaQuery.of(context).size.width;
                               ),
                               onTap:(){
                             Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                              return OrderScreen();
+                              return EditCart();
                             }));
                           }),
                         ],
@@ -265,6 +268,7 @@ final width=MediaQuery.of(context).size.width;
                                       padding:  EdgeInsets.all(10),
                                       child: GestureDetector(
                                         onTap: (){
+                                          Provider.of<MarketInfo>(context,listen: false).addMarket(markets[index]);
                                           Navigator.push(context, (MaterialPageRoute(
                                             builder: (context)=>MarketContent(marketName:markets[index].name)
                                           )));
@@ -438,7 +442,7 @@ final width=MediaQuery.of(context).size.width;
                   ListTile(
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                        return OrderScreen();
+                        return EditCart();
                       }));
                     },
                     title: Text('Order', style: TextStyle(
@@ -494,6 +498,34 @@ final width=MediaQuery.of(context).size.width;
           ),
         ),
       ),
+       floatingActionButton:itemCount!=null? FloatingActionButton(
+         backgroundColor: Colors.blue,
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (ctx){
+            return EditCart();
+          }));
+        },
+        child:  Padding(
+          padding:  EdgeInsets.all(8.0),
+          child: Stack(
+            children: [
+              Icon(Icons.shopping_cart,color: Colors.white,
+              size: 35,),
+
+             Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.redAccent,
+                  child: Text(itemCount.toString(),style: TextStyle(
+                      color: Colors.white
+                  ),),
+                ),
+              )
+            ],
+          ),
+        ),
+      ): Text('')
     );
   }
 

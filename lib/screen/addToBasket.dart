@@ -2,6 +2,8 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:feedme/model/product.dart';
 import 'package:feedme/provider/counter.dart';
+import 'package:feedme/provider/productInfo.dart';
+import 'package:feedme/provider/totalPrice.dart';
 
 
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ double totalPrice;
     setState(() {
       price=double.parse(widget.product.price);
       totalPrice =price*counter;
+
     });
 
 
@@ -150,7 +153,10 @@ Spacer(),
                             item=itemCount+counter;
                           });
                         }
-                      Provider.of<ItemCount>(context,listen: false).addCounter(item);
+                        Provider.of<ItemCount>(context,listen: false).addCounter(counter);
+                      Provider.of<ItemCount>(context,listen: false).addItem(item);
+                        Provider.of<TotalPrice>(context,listen: false).savePrice(totalPrice);
+                        Provider.of<ProductInfo>(context,listen: false).addProduct(widget.product);
                       Navigator.pop(context);
                     },
                     child: Text('Add item',
