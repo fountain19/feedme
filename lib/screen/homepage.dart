@@ -498,7 +498,7 @@ final width=MediaQuery.of(context).size.width;
           ),
         ),
       ),
-       floatingActionButton:itemCount!=null? FloatingActionButton(
+       floatingActionButton:itemCount!=null&&itemCount!=0? FloatingActionButton(
          backgroundColor: Colors.blue,
         onPressed: (){
           Navigator.push(context, MaterialPageRoute(builder: (ctx){

@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/model/product.dart';
 import 'package:feedme/provider/counter.dart';
 import 'package:feedme/provider/productInfo.dart';
@@ -8,6 +9,8 @@ import 'package:feedme/provider/totalPrice.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 
 class AddToBasket extends StatefulWidget {
@@ -22,6 +25,22 @@ int item;
   int counter=1;
 double totalPrice;
   double price;
+String userId;
+String Id = Uuid().v4();
+
+void getUserId()async{
+  final  SharedPreferences localStorage=await SharedPreferences.getInstance();
+   userId= localStorage.getString('userId');
+
+  setState(() {});
+}
+
+@override
+void initState() {
+  super.initState();
+  getUserId();
+}
+
   @override
   Widget build(BuildContext context) {
 
@@ -77,7 +96,7 @@ double totalPrice;
             Text(widget.product.productName,style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-fontSize: 25
+            fontSize: 25
             )),
             Text('${widget.product.price} t',style: TextStyle(
               color: Colors.white,
@@ -123,7 +142,7 @@ fontSize: 25
               ],
             ),
           ),
-Spacer(),
+       Spacer(),
       Container(
         color:Color(0xff193044),
         width: width,
@@ -143,6 +162,16 @@ Spacer(),
                 width: width*.3,
                 child: TextButton(
                     onPressed: (){
+                      // FirebaseFirestore.instance.collection('CustomerRequests').doc(userId)
+                      //     .collection('request').doc(Id).set({
+                      //   'marketName':widget.product.marketName,
+                      //   'productImage':widget.product.image,
+                      //
+                      //   'productName':widget.product.productName,
+                      //   'productPrice':widget.product.price,
+                      //   'counter':counter,
+                      //   'totalPrice':totalPrice.toStringAsFixed(2)
+                      // });
                         if(itemCount==null){
                           setState(() {
                             item=counter;

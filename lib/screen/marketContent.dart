@@ -85,7 +85,7 @@ class _MarketContentState extends State<MarketContent> {
                             return EditCart();
                           }));
                         }),
-                    itemCount==null? CircleAvatar(
+                    itemCount==null||itemCount==0? CircleAvatar(
                   radius: 0.00001,
                       child: Text(''),
                 ):Align(
@@ -176,12 +176,13 @@ class _MarketContentState extends State<MarketContent> {
                                           } );
                                     },
                                     child: Container(
+
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(25),
                                       ),
 
-                                      child:CachedNetworkImage(
+                                      child:CachedNetworkImage(fit: BoxFit.cover,
                                         imageUrl: products[index].image,
                                         placeholder: (context, url) => CircularProgressIndicator(
                                           backgroundColor: Colors.white,
@@ -200,9 +201,7 @@ class _MarketContentState extends State<MarketContent> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: Color(0xff193044),
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft:Radius.circular(25),
-                                        ),
+
                                       ),
                                       height: height*.07,
                                       width: width*.46,
@@ -215,12 +214,21 @@ class _MarketContentState extends State<MarketContent> {
                                             Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Text(products[index].productName,style: TextStyle(
-                                                    fontWeight: FontWeight.bold,color: Colors.white
-                                                ),),
-                                                Text('\$ ${products[index].price}',style: TextStyle(
-                                                    color: Colors.white
-                                                ),),
+                                                Container(
+                                                  width: width*.2,
+                                                  height: height*.025,
+
+                                                  child: Text(products[index].productName,style: TextStyle(
+                                                      color: Colors.white
+                                                  ),),
+                                                ),
+                                                Container(
+                                                  width: width*.2,
+                                                  height: height*.02,
+                                                  child: Text('\$ ${products[index].price}',style: TextStyle(
+                                                      color: Colors.white
+                                                  ),),
+                                                ),
 
                                               ],
                                             ),
@@ -233,18 +241,21 @@ class _MarketContentState extends State<MarketContent> {
                                                 products[index]
                                               );}));
                                               },
-                                              child: Container(
-                                                height: height*0.1,
-                                                width: width*.15,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.red,
-                                                  borderRadius: BorderRadius.circular(25)
-                                                  ),
-                                                child: Center(
-                                                  child: Text(
-                                                    'Add',style: TextStyle(
-                                                    color: Colors.white
-                                                  ),
+                                              child: Padding(
+                                                padding:  EdgeInsets.only(right: 10),
+                                                child: Container(
+                                                  height: height*0.1,
+                                                  width: width*.15,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                    borderRadius: BorderRadius.circular(25)
+                                                    ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      'Add',style: TextStyle(
+                                                      color: Colors.white
+                                                    ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
