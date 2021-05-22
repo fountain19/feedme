@@ -5,6 +5,7 @@
 
 
 import 'package:feedme/provider/counter.dart';
+import 'package:feedme/provider/endPrice.dart';
 import 'package:feedme/provider/marketInfo.dart';
 import 'package:feedme/provider/productInfo.dart';
 import 'package:feedme/provider/totalPrice.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
     ]);
     return  MultiProvider(
       providers: [
+        ChangeNotifierProvider<EndPrice>(create: (_)=>EndPrice()),
         ChangeNotifierProvider<ItemCount>(create: (_)=>ItemCount()),
         ChangeNotifierProvider<MarketInfo>(create: (_)=>MarketInfo()),
         ChangeNotifierProvider<ProductInfo>(create: (_)=>ProductInfo()),

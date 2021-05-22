@@ -3,6 +3,7 @@ import 'package:feedme/model/customerRequest.dart';
 import 'package:feedme/model/market.dart';
 import 'package:feedme/model/product.dart';
 import 'package:feedme/provider/counter.dart';
+import 'package:feedme/provider/endPrice.dart';
 import 'package:feedme/provider/marketInfo.dart';
 import 'package:feedme/provider/productInfo.dart';
 import 'package:feedme/provider/totalPrice.dart';
@@ -19,24 +20,26 @@ class EditCart extends StatefulWidget {
 }
 
 class _EditCartState extends State<EditCart> {
+
+
   @override
   Widget build(BuildContext context) {
 
-    String userId;
-    String Id = Uuid().v4();
-
-    void getUserId()async{
-      final  SharedPreferences localStorage=await SharedPreferences.getInstance();
-      userId= localStorage.getString('userId');
-
-      setState(() {});
-    }
-
-    @override
-    void initState() {
-      super.initState();
-      getUserId();
-    }
+    // String userId;
+    // String Id = Uuid().v4();
+    //
+    // void getUserId()async{
+    //   final  SharedPreferences localStorage=await SharedPreferences.getInstance();
+    //   userId= localStorage.getString('userId');
+    //
+    //   setState(() {});
+    // }
+    //
+    // @override
+    // void initState() {
+    //   super.initState();
+    //   getUserId();
+    // }
 
 
     List<int> counter= Provider.of<ItemCount>(context).count;
@@ -44,6 +47,8 @@ class _EditCartState extends State<EditCart> {
     List<Product> product= Provider.of<ProductInfo>(context).product;
     List<double> price= Provider.of<TotalPrice>(context).price;
     int itemCount= Provider.of<ItemCount>(context).item;
+
+
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -87,184 +92,239 @@ class _EditCartState extends State<EditCart> {
             ],
           ),
         )):
-
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          physics: ScrollPhysics(),
-          child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-            child: Column(
-              children: [
+Stack(
+  children: [
+    Padding(
+      padding:  EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+      child: Column(
+        children: [
 
 
 
-                ListView.builder(
-                    physics: ScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: market.length,
-                    itemBuilder:(context,index){
-                      return Container(
-                        child: Row(
-                          children: [
-                            Container(
-                              height: height*.2,width: width*.2,
-                              child: Image.network(
-                                  market[index].image
-                              ),
-                            ),
-                            Container(
-                              child: Text(
-                                market[index].name,style: TextStyle(
-                                  color: Colors.white
-                              ),
-                              ),
-                            )
-                          ],
+          ListView.builder(
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: market.length,
+              itemBuilder:(context,index){
+                return Container(
+                  child: Row(
+                    children: [
+                      Container(
+                        height: height*.2,width: width*.2,
+                        child: Image.network(
+                            market[index].image
                         ),
-                      );
-                    } ),
-                ListView.builder(
-                    physics: ScrollPhysics(),
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    itemCount: product.length,
-                    itemBuilder:(context,index){
-                      return Padding(
-                        padding:  EdgeInsets.only(top: 10),
-                        child: Container(
+                      ),
+                      Container(
+                        child: Text(
+                          market[index].name,style: TextStyle(
+                            color: Colors.white
+                        ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              } ),
+          ListView.builder(
+              physics: ScrollPhysics(),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemCount: product.length,
+              itemBuilder:(context,index){
 
-                          height: height*.12,width: width*.95,
-                          decoration: BoxDecoration(
-                            color: Color(0xff193044),
-                            border: Border.all(color: Colors.white,width: 1),
-                            borderRadius: BorderRadius.circular(15),
+                return Padding(
+                  padding:  EdgeInsets.only(top: 10),
+                  child: Container(
+
+                    height: height*.12,width: width*.95,
+                    decoration: BoxDecoration(
+                      color: Color(0xff193044),
+                      border: Border.all(color: Colors.white,width: 1),
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                            ),
+
+                            height: height*.10,width: width*.2,
+                            child: Image.network(
+                              product[index].image,
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                        ),
+                        Container(
+
+                          width: width*.2,
+                          height: height*.07,
+                          child: Text(
+                            product[index].productName,style: TextStyle(
+                              color: Colors.white
+                          ),),
+                        ),
+                        Container(
+
+                          //color: Colors.white,
+                          width: width*.3,
+                          height: height*.05,
                           child: Row(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                  ),
+                              IconButton(
 
-                                  height: height*.10,width: width*.2,
-                                  child: Image.network(
-                                    product[index].image,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
+                                  onPressed: (){
+                                    setState(() {
+                                      counter[index]=counter[index]+1;
+                                      price[index]=price[index]+double.parse(product[index].price);
+                                      itemCount=itemCount+1;
+                                    });
+                                    Provider.of<TotalPrice>(context,listen: false).savePrice(price[index]);
+                                    Provider.of<ItemCount>(context,listen: false).addCounter(counter[index]);
+                                    Provider.of<ItemCount>(context,listen: false).addItem(itemCount);
+                                  },
+                                  icon:Icon(Icons.add,color: Colors.white,size: 15,)
                               ),
                               Container(
 
-                                width: width*.2,
-                                height: height*.07,
-                                child: Text(
-                                  product[index].productName,style: TextStyle(
-                                    color: Colors.white
-                                ),),
+                                child: Text(counter[index].toString(),style: TextStyle(
+                                    color: Colors.white,fontSize: 10)),
                               ),
-                              Container(
+                              IconButton(
+                                  onPressed: (){
+                                    if(counter[index]>1){
+                                      setState(() {
+                                        counter[index]=counter[index]-1;
+                                        price[index]=price[index]-double.parse(product[index].price);
+                                        itemCount=itemCount-1;
+                                      }
+                                      );
+                                      Provider.of<TotalPrice>(context,listen: false).savePrice(price[index]);
+                                      Provider.of<ItemCount>(context,listen: false).addCounter(counter[index]);
+                                      Provider.of<ItemCount>(context,listen: false).addItem(itemCount);
+                                    }else{
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => new AlertDialog(
+                                            title: new Text("Remove"),
+                                            content: new Text("Are you sure to want remove this item from cart"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                  onPressed: (){
+                                                    Navigator.pop(context);
+                                                  }
+                                                  , child: Text('No')),
+                                              TextButton(
+                                                  onPressed: (){
 
-                                //color: Colors.white,
-                                width: width*.3,
-                                height: height*.05,
-                                child: Row(
-                                  children: [
-                                    IconButton(
+                                                    setState(() {
+                                                      itemCount=itemCount-1;
+                                                      counter[index]=0;
+                                                      price[index]=0;
+                                                      counter[index]=counter[index+1];
+                                                      price[index]=price[index+1];
+                                                    });
+                                                    Provider.of<TotalPrice>(context,listen: false).savePrice(price[index]);
+                                                    Provider.of<ItemCount>(context,listen: false).addCounter(counter[index]);
+                                                    Provider.of<ItemCount>(context,listen: false).addItem(itemCount);
+                                                    Provider.of<ProductInfo>(context,listen: false).deleteProduct(product[index]);
 
-                                        onPressed: (){
-                                          setState(() {
-                                            counter[index]=counter[index]+1;
-                                            price[index]=price[index]+double.parse(product[index].price);
-                                            itemCount=itemCount+1;
-                                          });
-                                          Provider.of<TotalPrice>(context,listen: false).savePrice(price[index]);
-                                          Provider.of<ItemCount>(context,listen: false).addCounter(counter[index]);
-                                          Provider.of<ItemCount>(context,listen: false).addItem(itemCount);
-                                        },
-                                        icon:Icon(Icons.add,color: Colors.white,size: 15,)
-                                    ),
-                                    Container(
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text('Yes'))
+                                            ],
+                                          ));
+                                      //_showMaterialDialog(product[index],counter[index],
+                                      //    price[index],itemCount
+                                      // );
+                                    }
 
-                                      child: Text(counter[index].toString(),style: TextStyle(
-                                          color: Colors.white,fontSize: 10)),
-                                    ),
-                                    IconButton(
-                                        onPressed: (){
-                                          if(counter[index]>1){
-                                            setState(() {
-                                              counter[index]=counter[index]-1;
-                                              price[index]=price[index]-double.parse(product[index].price);
-                                              itemCount=itemCount-1;
-                                            }
-                                            );
-                                            Provider.of<TotalPrice>(context,listen: false).savePrice(price[index]);
-                                            Provider.of<ItemCount>(context,listen: false).addCounter(counter[index]);
-                                            Provider.of<ItemCount>(context,listen: false).addItem(itemCount);
-                                          }else{
-                                            showDialog(
-                                                context: context,
-                                                builder: (_) => new AlertDialog(
-                                                  title: new Text("Remove"),
-                                                  content: new Text("Are you sure to want remove this item from cart"),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                        onPressed: (){
-                                                          Navigator.pop(context);
-                                                        }
-                                                        , child: Text('No')),
-                                                    TextButton(
-                                                        onPressed: (){
+                                  },
 
-                                                          setState(() {
-                                                            itemCount=itemCount-1;
-                                                            counter[index]=0;
-                                                            price[index]=0;
-                                                            counter[index]=counter[index+1];
-                                                            price[index]=price[index+1];
-                                                          });
-                                                          Provider.of<TotalPrice>(context,listen: false).savePrice(price[index]);
-                                                           Provider.of<ItemCount>(context,listen: false).addCounter(counter[index]);
-                                                          Provider.of<ItemCount>(context,listen: false).addItem(itemCount);
-                                                          Provider.of<ProductInfo>(context,listen: false).deleteProduct(product[index]);
-
-                                                          Navigator.pop(context);
-                                                        },
-                                                        child: Text('Yes'))
-                                                  ],
-                                                ));
-                                            //_showMaterialDialog(product[index],counter[index],
-                                            //    price[index],itemCount
-                                           // );
-                                          }
-
-                                        },
-
-                                        icon:Icon(Icons.remove,color: Colors.white,size: 15,)
-                                    ),
-                                  ],),
+                                  icon:Icon(Icons.remove,color: Colors.white,size: 15,)
                               ),
-                              Padding(
-                                padding:  EdgeInsets.only(top: 15),
-                                child: Container(
-                                  //color: Colors.white,
-                                  width: width*.132,
-                                  height: height*.05,
-                                  child: Text(price[index].toStringAsFixed(2),style: TextStyle(
-                                      color: Colors.white,fontSize: 12),
-                                  ),
-                                ),
-                              )],
-                          ),
+                            ],),
                         ),
-                      );
-                    } ),
+                        Padding(
+                          padding:  EdgeInsets.only(top: 15),
+                          child: Container(
+                            //color: Colors.white,
+                            width: width*.132,
+                            height: height*.05,
+                            child: Text(price[index].toStringAsFixed(2),style: TextStyle(
+                                color: Colors.white,fontSize: 12),
+                            ),
+                          ),
+                        )],
+                    ),
+                  ),
+                );
+
+              }
+              ),
+        ],
+      ),
+    ),
+    Positioned(
+      left: 0.0,
+      right: 0.0,
+      bottom: 0.0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white38,
+        ),
+        height: height*0.15,
+        width: width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Padding(
+                    padding:  EdgeInsets.only(left: width*0.01),
+                    child: Text('Total',
+                      style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
+                  ),
+                  Padding(
+                    padding:  EdgeInsets.only(left: width*0.01),
+                    child: Text('(Excluding taxes and other Charges)',
+                      style: TextStyle(color: Colors.black),),
+                  ),
+                ],),
+                Text('')
               ],
             ),
-          ),
-        )
+
+            Container(
+              color:  Color(0xff193044),
+              height: height*0.07,
+              width: width,
+              child: GestureDetector(
+                  onTap: (){},
+                  child: Center(
+                    child: Text(
+                      'Checkout',
+                      style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,
+                          fontSize:25 ),),
+                  )
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  ],
+),
+
 
         // SingleChildScrollView(
         //   physics: ScrollPhysics(),
@@ -446,8 +506,7 @@ class _EditCartState extends State<EditCart> {
 
 
      );
-  }
-  _showMaterialDialog(Product _product, int _counter,double _price,int _itemCount) {
 
   }
+
 }
