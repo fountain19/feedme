@@ -7,4 +7,8 @@ class TotalPrice extends ChangeNotifier{
    price.add(newValue);
     notifyListeners();
   }
+  void deletePrice(double newValue){
+    price.remove(newValue);
+    notifyListeners();
+  }
 }

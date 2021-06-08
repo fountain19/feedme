@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class EndPrice extends ChangeNotifier{
-  List<double> price=[];
+  double Endprice;
   void getPrice(double value){
-    price.add(value);
+    Endprice=value;
     notifyListeners();
   }
 }

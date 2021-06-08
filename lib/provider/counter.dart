@@ -11,5 +11,9 @@ void addCounter(int counter){
     count.add(counter);
     notifyListeners();
 }
+void deleteCounter(int counter){
+  count.remove(counter);
+  notifyListeners();
+}
 
 }

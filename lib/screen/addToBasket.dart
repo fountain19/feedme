@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:feedme/model/product.dart';
 import 'package:feedme/provider/counter.dart';
+import 'package:feedme/provider/endPrice.dart';
 import 'package:feedme/provider/productInfo.dart';
 import 'package:feedme/provider/totalPrice.dart';
 
@@ -28,6 +29,7 @@ double totalPrice;
 String userId;
 String Id = Uuid().v4();
 
+
 void getUserId()async{
   final  SharedPreferences localStorage=await SharedPreferences.getInstance();
    userId= localStorage.getString('userId');
@@ -43,11 +45,13 @@ void initState() {
 
   @override
   Widget build(BuildContext context) {
-
+    double endPrice=Provider.of<EndPrice>(context).Endprice;
     final  itemCount= Provider.of<ItemCount>(context).item;
     setState(() {
       price=double.parse(widget.product.price);
       totalPrice =price*counter;
+endPrice==null?endPrice=totalPrice:endPrice=endPrice+totalPrice;
+
 
     });
 
@@ -182,6 +186,8 @@ fontSize: 25
                             item=itemCount+counter;
                           });
                         }
+                        print('counter and price : ${counter.toString()} && ${price.toString()}');
+                        Provider.of<EndPrice>(context,listen: false).getPrice(endPrice);
                         Provider.of<ItemCount>(context,listen: false).addCounter(counter);
                       Provider.of<ItemCount>(context,listen: false).addItem(item);
                         Provider.of<TotalPrice>(context,listen: false).savePrice(totalPrice);
